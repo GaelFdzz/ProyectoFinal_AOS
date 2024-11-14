@@ -1,11 +1,14 @@
-import { Routes } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
-import Header from "./pages/Header"
+import Header from "./components/Header"
 
 function App() {
   return (
     <>
-    <Header />
+      <Header />
+      <Routes>
+        {/* <Route path="/" element={<Login />} /> */}
+      </Routes>
     </>
   )
 }
