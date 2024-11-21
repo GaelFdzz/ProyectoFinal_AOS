@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import "../styles/productsList.css";
 
 const Catalogo = () => {
   const [productos, setProductos] = useState([]);
@@ -9,7 +10,6 @@ const Catalogo = () => {
         const response = await fetch('http://localhost:3000/productos');
         const data = await response.json();
         setProductos(data);
-        console.log('Productos obtenidos:', productos);
       } catch (error) {
         console.error('Error al obtener los productos:', error);
       }
@@ -20,11 +20,15 @@ const Catalogo = () => {
 
   return (
     <div>
-      <h1>Catálogo de Productos</h1>
-      <div>
+      <div className='productsList'>
         {productos.length > 0 ? (
           productos.map((producto) => (
-            <div key={producto.Id_Producto}>
+            <div className='productSale' key={producto.Id_Producto}>
+              <img
+                src={`http://localhost:3000${producto.Imagen || '/iphone.png'}`}
+                alt={producto.Nombre}
+                className="productImage"
+              />
               <h2>{producto.Nombre}</h2>
               <p>{producto.Descripcion}</p>
               <p>Precio: {producto.Precio}</p>
