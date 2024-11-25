@@ -1,51 +1,44 @@
-const express = require("express");
-const nodemailer = require("nodemailer");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import express, { Request, Response } from 'express';
+import nodemailer from 'nodemailer';
 
 const app = express();
 const port = 5000;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// Ruta para enviar correos
-app.post("/send-email", async (req, res) => {
-  const { name, email, subject, message, recipient } = req.body;
+// Configura nodemailer para Gmail
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'diegoruben171@gmail.com', // Tu correo de Gmail
+    pass: 'istv hvkx ffhg qfvu', // Usa la contraseña de aplicación generada
+  },
+  tls: {
+    rejectUnauthorized: false, // A veces necesario para evitar errores SSL
+  },
+});
 
-  // Configuración del transportador de Nodemailer con mejoras en la configuración
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "diegoruben171@gmail.com", // Tu correo
-      pass: "plezoizhyjgjwqys", // Contraseña de aplicación
-    },
-    tls: {
-      rejectUnauthorized: false // Esto permite conexiones con certificados no verificados (útil en entornos de desarrollo)
-    }
-  });
+// Ruta para enviar el correo
+app.post('/send-email', async (req: Request, res: Response) => {
+  const { name, email, subject, message } = req.body;
 
-  // Opciones del correo
   const mailOptions = {
-    from: email || "diegoruben171@gmail.com", // Si no se proporciona correo, usa el predeterminado
-    to: recipient, // Correo al que se enviará el mensaje
+    from: 'diegoruben171@gmail.com', // Tu correo
+    to: 'diegoruben171@gmail.com', // El correo al que se enviará
     subject: subject,
-    text: `De: ${name || "Anónimo"}\nCorreo: ${email || "No especificado"}\n\n${message}`,
+    text: `Nombre: ${name}\nCorreo: ${email}\n\nMensaje:\n${message}`,
   };
 
   try {
-    // Enviar correo
+    // Envía el correo
     await transporter.sendMail(mailOptions);
-    res.status(200).send("Correo enviado correctamente.");
+    res.status(200).send({ message: 'Correo enviado correctamente' });
   } catch (error) {
-    // Manejo detallado del error
-    console.error("Error al enviar el correo:", error);
-    res.status(500).send(`Error al enviar el correo: ${error.message}`);
+    console.error('Error al enviar el correo:', error);
+    res.status(500).send({ message: 'Hubo un problema al enviar el correo. Inténtalo más tarde.' });
   }
 });
 
-// Iniciar servidor
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Servidor corriendo en http://localhost:${5175}`);
 });

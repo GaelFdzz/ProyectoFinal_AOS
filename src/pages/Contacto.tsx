@@ -53,7 +53,7 @@ const ContactPage: React.FC = () => {
   return (
     <div style={{ fontFamily: "Arial, sans-serif", maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
       <header style={{ textAlign: "center", marginBottom: "30px" }}>
-        <h1 style={{ margin: "0", color: "#007BFF" }}>SellPhone</h1>
+        <h1 style={{ margin: "0", color: "orange" }}>SellPhone</h1>
       </header>
       <section>
         <h2 style={{ color: "#333" }}>Contáctanos</h2>
