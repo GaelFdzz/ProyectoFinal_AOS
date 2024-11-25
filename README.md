@@ -16,3 +16,6 @@ Dependencias para ejecutar el proyecto:
 (*Back-end*)
 - multer
 - nestjs/platform-express
+
+Posibles errores:
+npm install @nestjs/common @nestjs/core @nestjs/platform-express multer
