@@ -20,6 +20,13 @@ const ContactPage: React.FC = () => {
     setIsSubmitting(true);
     setFeedback("");
 
+    // Validación básica de los campos
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setFeedback("Por favor, completa todos los campos.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/send-email", {
         method: "POST",
@@ -51,8 +58,7 @@ const ContactPage: React.FC = () => {
       <section>
         <h2 style={{ color: "#333" }}>Contáctanos</h2>
         <p style={{ lineHeight: "1.6", color: "#555" }}>
-          En SellPhone, estamos comprometidos con brindarte el mejor servicio en la compra y venta de equipos de segunda
-          mano.
+          En SellPhone, estamos comprometidos con brindarte el mejor servicio en la compra y venta de equipos de segunda mano.
         </p>
         <ul>
           <li><strong>Email:</strong> sellphonecun@gmail.com</li>
