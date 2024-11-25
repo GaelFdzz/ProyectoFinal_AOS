@@ -5,18 +5,24 @@ import Home from "./pages/Home"
 import Footer from "./components/Footer"
 import "./styles/App.css"
 import Contacto from "./pages/Contacto"
+import { CarritoProvider } from "./context/carritoContext"
+import Carrito from "./pages/Carrito"
+import CheckoutPage from "./pages/checkoutPage"
 
 function App() {
   return (
-    <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/contacto" element={<Contacto />} />A
-      </Routes>
-
-      <Footer />
-    </>
+    <CarritoProvider>
+      <>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+        </Routes>
+        <Footer />
+      </>
+    </CarritoProvider>
   )
 }
 

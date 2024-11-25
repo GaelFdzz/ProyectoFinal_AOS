@@ -1,14 +1,14 @@
 import axios from "axios"
-import { Productos } from "@prisma/client"
+import { Producto } from "../interfaces/producto"
 
 const API_URL = "http://localhost:3000/productos"
 
-export const obtenerProductos = async (): Promise<Productos[]> =>{
+export const obtenerProductos = async (): Promise<Producto[]> =>{
     const response = await axios.get(API_URL)
     return response.data
 }
 
-export const crearProducto = async (nuevoProducto: Productos): Promise<Productos> => {
+export const crearProducto = async (nuevoProducto: Producto): Promise<Producto> => {
     const response = await axios.post(API_URL, nuevoProducto)
     return response.data
 }
