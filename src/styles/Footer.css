@@ -1,0 +1,9 @@
+.footerSellphone {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    align-items: center;
+}

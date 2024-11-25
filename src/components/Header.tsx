@@ -1,33 +1,30 @@
 import { Link } from "react-router-dom"
 import "../styles/Header.css"
-function Header() {
 
+function Header() {
     return (
         <>
-            <header>
-                <div className="containerHeader">
-                    <div className="tittleSellPhone">
-                        <h1>SellPhone</h1>
-                    </div>
-
-                    <div className="searchbarHeader">
-                        <input type="text" placeholder="Buscar" />
-                        <button>Buscar</button>
-                    </div>
-
-                    <div className="navbarHeader">
-                        <nav>
-                            <ul>
-                                <li><Link to="/">Tienda</Link></li>
-                                <li><Link to="/carrito">Carrito</Link></li>
-                                <li><Link to="/contacto">Contactanos</Link></li>
-                                <li><Link to="/contacto">Dashboard</Link></li>
-                                <li><Link to="/contacto">Mi perfil</Link></li>
-                            </ul>
-                        </nav>
+            <nav className="navbar navbar-expand-lg">
+                <div className="container-fluid">
+                    <Link className="navbar-brand" to="/">SellPhone</Link>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/">Tienda</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/contacto">Contacto</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/proyectos">Dashboard</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/proyectos">Mi perfil</Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </header>
+            </nav>
         </>
     )
 }
