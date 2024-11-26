@@ -7,7 +7,8 @@ import "./styles/App.css"
 import Contacto from "./pages/Contacto"
 import { CarritoProvider } from "./context/carritoContext"
 import Carrito from "./pages/Carrito"
-import CheckoutPage from "./pages/checkoutPage"
+import CheckoutPage from "./pages/CheckoutPage"
+import DetallesProducto from "./components/DetallesProducto"
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/productos/:id" element={<DetallesProducto />} />
         </Routes>
         <Footer />
       </>

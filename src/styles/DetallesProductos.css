@@ -1,0 +1,91 @@
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contenidoProducto {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+.detallesProducto {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+}
+
+.detallesInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+
+.detallesInfo h2 {
+    margin-top: 0;
+}
+
+.detallesImagen img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.reseñasUsuarios {
+    flex: 0.35;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    height: 100%; 
+    overflow-y: auto; 
+}
+
+.reseñasList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.reseña {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.detallesInfo button {
+    background-color: #f0c14b;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.detallesInfo button:hover {
+    background-color: #e6b320;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

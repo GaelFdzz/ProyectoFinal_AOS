@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCarrito } from '../context/carritoContext';
 import "../styles/productsList.css";
+import { Link } from 'react-router-dom';
 
 interface Producto {
   Id_Producto: number;
@@ -67,6 +68,9 @@ const Catalogo = () => {
                 <button onClick={() => manejarAgregarAlCarrito(producto)}>
                   {estaEnCarrito(producto.Id_Producto) ? 'Agregado al carrito' : 'Agregar al carrito'}
                 </button>
+                <Link to={`/productos/${producto.Id_Producto}`}>
+                  <button>Ver Detalles</button>
+                </Link>
               </div>
             ))
           ) : (
