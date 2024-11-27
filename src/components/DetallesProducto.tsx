@@ -64,8 +64,8 @@ const DetallesProducto = () => {
                         <p>{producto.Descripcion}</p>
                         <p>Precio: {producto.Precio} MXN</p>
                         <p>Stock: {producto.Stock}</p>
-                        <button>Agregar al carrito</button>
-                        <button>Agregar reseña</button>
+                        <button className='buttonAgregarAlCarrito'>Agregar al carrito</button>
+                        <button className='buttonAgregarReseña'>Agregar reseña</button>
                     </div>
                 </div>
 

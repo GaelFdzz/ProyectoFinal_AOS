@@ -2,6 +2,7 @@
     width: 80%;
     margin: 0 auto;
     padding: 20px;
+    min-height: 85vh;
 }
 
 .container h1 {
@@ -23,6 +24,7 @@
     padding: 20px;
     border: 2px solid #ccc;
     border-radius: 8px;
+    background-color: white;
 }
 
 .detallesInfo {
@@ -50,6 +52,7 @@
     border-radius: 8px;
     height: 100%; 
     overflow-y: auto; 
+    background-color: white;
 }
 
 .reseñasList {
@@ -65,15 +68,23 @@
 }
 
 .detallesInfo button {
-    background-color: #f0c14b;
     padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    color: white;
 }
 
 .detallesInfo button:hover {
-    background-color: #e6b320;
+    opacity: 80%;
+}
+
+.buttonAgregarAlCarrito{
+    background-color: #FFC300;
+}
+
+.buttonAgregarReseña{
+    background-color: #383146;
 }
 
 .spinner {

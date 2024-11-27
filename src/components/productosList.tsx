@@ -65,11 +65,11 @@ const Catalogo = () => {
                 <p>{producto.Descripcion}</p>
                 <p>Precio: {producto.Precio}</p>
                 <p>Stock: {producto.Stock}</p>
-                <button onClick={() => manejarAgregarAlCarrito(producto)}>
+                <button className='buttonAgregarCarrito' onClick={() => manejarAgregarAlCarrito(producto)}>
                   {estaEnCarrito(producto.Id_Producto) ? 'Agregado al carrito' : 'Agregar al carrito'}
                 </button>
                 <Link to={`/productos/${producto.Id_Producto}`}>
-                  <button>Ver Detalles</button>
+                  <button className='buttonVerDetalles'>Ver Detalles</button>
                 </Link>
               </div>
             ))
