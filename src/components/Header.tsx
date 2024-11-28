@@ -22,7 +22,7 @@ function Header() {
                                 <Link className="nav-link" to="/dashboard">Dashboard</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/Perfil">Mi perfil</Link>
+                                <Link className="nav-link" to="/perfil">Mi perfil</Link>
                             </li>
                         </ul>
                     </div>

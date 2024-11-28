@@ -10,6 +10,9 @@ import Carrito from "./pages/Carrito"
 import CheckoutPage from "./pages/CheckoutPage"
 import DetallesProducto from "./components/DetallesProducto"
 import Dashboard from "./pages/Dashboard"
+import Login from "./pages/Login"
+import Perfil from "./components/Perfil"
+import EditarPerfil from "./components/EditarPerfil"
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/productos/:id" element={<DetallesProducto />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/editar-perfil" element={<EditarPerfil />} />
         </Routes>
         <Footer />
       </>
