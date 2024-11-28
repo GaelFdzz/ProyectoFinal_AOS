@@ -11,25 +11,37 @@
     background-color: black;
 }
 
-.navbar .navbar-brand{
+.navbar .navbar-brand {
     color: white;
     font-size: 2rem;
     font-family: WF Visual Sans, Arial, sans-serif;
     font-weight: bold;
+    transition: color 0.3s ease-in-out;
 }
 
-.navbar .navbar-brand:hover{
+.navbar .navbar-brand:hover {
     color: rgb(179, 179, 179);
     transition: color 0.3s ease-in-out;
 }
 
-.navbar .nav-link{
+.navbar .navbar-brand:focus {
+    color: white; /* Asegúrate de que se mantenga visible al hacer clic */
+    outline: none; /* Opcional: elimina el borde de enfoque si no lo quieres */
+}
+
+.navbar .nav-link {
     color: white;
     font-size: 1.5rem;
     font-family: WF Visual Sans, Arial, sans-serif;
+    transition: color 0.3s ease-in-out;
 }
 
-.navbar .nav-link:hover{
+.navbar .nav-link:hover {
     color: rgb(179, 179, 179);
     transition: color 0.3s ease-in-out;
+}
+
+.navbar .nav-link:focus {
+    color: white; /* Mantener el color visible al hacer clic o recibir foco */
+    outline: none; /* Opcional: elimina el borde de enfoque si no lo quieres */
 }

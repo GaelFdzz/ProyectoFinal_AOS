@@ -1,50 +1,22 @@
-# React + TypeScript + Vite
+# Dependencias del proyecto SellPhone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Clonar el repositorio de "backend_sellphone: https://github.com/GaelFdzz/backend_sellphone.git" dentro de la carpeta del front-end de la aplicación web
+Ejectuar el comando 'npm i' dentro del proyecto
 
-Currently, two official plugins are available:
+Crear el archivo .env dentro de la raíz del repositorio clonado ↑ (backend_sellphone) ↑
+Con el siguiente contenido: DATABASE_URL = "mysql://root:password@localhost:3306/sellphone"
+*No olvides cambiar la contraseña según como la estableciste*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Dependencias para ejecutar el proyecto:
+(*Front-end*)
+- prisma/client
+- axios
+- bootstrap
+- react-router-dom
 
-## Expanding the ESLint configuration
+(*Back-end*)
+- multer
+- nestjs/platform-express
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Posibles errores:
+npm install @nestjs/common @nestjs/core @nestjs/platform-express multer
