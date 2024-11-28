@@ -1,0 +1,97 @@
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #e0e0e0;
+  }
+  
+  .panel {
+    display: flex;
+    width: 800px;
+    height: 400px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+  
+  .login-section,
+  .register-section {
+    display: flex;
+    flex: 1;
+  }
+  
+  .form {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .form h2 {
+    margin-bottom: 20px;
+  }
+  
+  .form input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form button {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-login {
+    background-color: #ff5c5c;
+    color: white;
+  }
+  
+  .btn-register {
+    background-color: #ff5c5c;
+    color: white;
+  }
+  
+  .welcome {
+    flex: 1;
+    background-color: #ffd600;
+    color: black;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .welcome h2 {
+    margin-bottom: 15px;
+  }
+  
+  .welcome p {
+    margin-bottom: 20px;
+  }
+  
+  .btn-secondary {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  
