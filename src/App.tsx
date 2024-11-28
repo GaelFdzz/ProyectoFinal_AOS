@@ -5,6 +5,8 @@ import Home from "./pages/Home"
 import Footer from "./components/Footer"
 import "./styles/App.css"
 import Contacto from "./pages/Contacto"
+import Perfil from "./components/Perfil"
+import EditarPerfil from "./components/EditarPerfil"
 
 function App() {
   return (
@@ -12,7 +14,9 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/contacto" element={<Contacto />} />A
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/perfil" element={<Perfil />} /> {/* Ruta correcta para Perfil */}
+        <Route path="/editar-perfil" element={<EditarPerfil />} />
       </Routes>
 
       <Footer />

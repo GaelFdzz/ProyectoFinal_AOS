@@ -1,0 +1,96 @@
+/* General */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f4f9; /* Fondo suave */
+    color: #333; /* Texto en tono gris oscuro */
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Título */
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #222; /* Texto más fuerte */
+    text-align: center;
+}
+
+/* Formulario */
+label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #555; /* Tono gris suave */
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #fcd116; /* Amarillo de enfoque */
+    outline: none;
+}
+
+/* Botones */
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button.save {
+    background-color: #fcd116; /* Amarillo vibrante */
+    color: #000;
+}
+
+.button.save:hover {
+    background-color: #e5b60f; /* Amarillo más oscuro */
+    transform: translateY(-2px); /* Efecto sutil al pasar el mouse */
+}
+
+.button.cancel {
+    background-color: #7a7a7a; /* Gris oscuro */
+    color: #fff;
+}
+
+.button.cancel:hover {
+    background-color: #6c6c6c; /* Gris más oscuro */
+    transform: translateY(-2px); /* Efecto sutil al pasar el mouse */
+}
+
+/* Botones - separación */
+.button:not(:last-child) {
+    margin-right: 1rem;
+}
+
+/* Centrado de los botones */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; /* Espacio entre los botones */
+  margin-top: 2rem; /* Margen superior para separar los botones de los campos del formulario */
+}
