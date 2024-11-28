@@ -1,127 +1,102 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 const ContactPage: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  useEffect(() => {
+    const tawkScript = document.createElement("script");
+    tawkScript.src = "https://embed.tawk.to/674514942480f5b4f5a4080f/1iditgp02";
+    tawkScript.async = true;
+    tawkScript.charset = "UTF-8";
+    tawkScript.setAttribute("crossorigin", "*");
+    document.body.appendChild(tawkScript);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState("");
+    return () => {
+      document.body.removeChild(tawkScript);
+    };
+  }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // Importación de fuente desde Google Fonts
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setFeedback("");
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
-    // Validación básica de los campos
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      setFeedback("Por favor, completa todos los campos.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:5000/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setFeedback("Correo enviado correctamente. ¡Gracias por contactarnos!");
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      } else {
-        setFeedback("Hubo un problema al enviar el correo. Inténtalo más tarde.");
-      }
-    } catch (error) {
-      console.error("Error al enviar el correo:", error);
-      setFeedback("Hubo un problema al enviar el correo. Inténtalo más tarde.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const styles = {
+    container: { fontFamily: "'Roboto', sans-serif", maxWidth: "800px", margin: "0 auto", padding: "20px" },
+    header: { textAlign: "center", marginBottom: "30px" },
+    title: { margin: "0", fontSize: "3.2rem", color: "#FFDE21" },
+    section: { textAlign: "center", padding: "20px", backgroundColor: "#f1f5f9", borderRadius: "15px" },
+    subtitle: { fontSize: "2rem", color: "#000" },
+    text: { lineHeight: "1.8", color: "#000", fontSize: "1.2rem" },
+    list: { listStyle: "none", padding: "0", fontSize: "1.2rem", color: "#000" },
+    link: {
+      textDecoration: "none",
+      padding: "15px 20px",
+      fontSize: "1.6rem",
+      borderRadius: "10px",
+      color: "#000",
+      backgroundColor: "#FFDE21",
+      transition: "background-color 0.3s",
+    },
+    linkHover: { backgroundColor: "#E6C71E" },
+    social: { display: "flex", justifyContent: "center", gap: "15px", marginTop: "20px" },
+    footer: {
+      textAlign: "center",
+      marginTop: "40px",
+      padding: "20px",
+      backgroundColor: "#1e293b",
+      color: "#fff",
+      fontSize: "1rem",
+      borderRadius: "10px",
+    },
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
-      <header style={{ textAlign: "center", marginBottom: "30px" }}>
-        <h1 style={{ margin: "0", color: "orange" }}>SellPhone</h1>
+    <div style={styles.container}>
+      <header style={styles.header}>
+        <h1 style={styles.title}>SellPhone</h1>
       </header>
-      <section>
-        <h2 style={{ color: "#333" }}>Contáctanos</h2>
-        <p style={{ lineHeight: "1.6", color: "#555" }}>
-          En SellPhone, estamos comprometidos con brindarte el mejor servicio en la compra y venta de equipos de segunda mano.
+      <section style={styles.section}>
+        <h2 style={styles.subtitle}>¿Necesitas ayuda?</h2>
+        <p style={styles.text}>
+          Estamos aquí para ayudarte. Usa nuestro chat en vivo para obtener soporte en tiempo real. Haz clic en el ícono
+          de chat en la esquina inferior derecha para comenzar.
         </p>
-        <ul>
-          <li><strong>Email:</strong> sellphonecun@gmail.com</li>
-          <li><strong>Teléfono:</strong> 9985396831</li>
-          <li><strong>Ubicación:</strong> Cancún Q.Roo, Benito Juárez</li>
+        <p style={styles.text}>Si prefieres contactarnos por otros medios:</p>
+        <ul style={styles.list}>
+          <li>
+            <strong>Email:</strong> sellphonecun@gmail.com
+          </li>
+          <li>
+            <strong>Teléfono:</strong> 9985396831
+          </li>
+          <li>
+            <strong>Ubicación:</strong> Cancún, Q. Roo, Benito Juárez
+          </li>
         </ul>
+        <div style={{ marginTop: "30px" }}>
+          <h3 style={{ fontSize: "1.5rem", color: "#000" }}>¡Síguenos en redes sociales!</h3>
+          <div style={styles.social}>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" style={styles.link}>
+              📘 Facebook
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" style={styles.link}>
+              🐦 Twitter
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" style={styles.link}>
+              📸 Instagram
+            </a>
+          </div>
+        </div>
       </section>
-      <section>
-        <h2>Envíanos un mensaje</h2>
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Nombre"
-            required
-            style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Correo electrónico"
-            required
-            style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-          <input
-            type="text"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            placeholder="Asunto"
-            required
-            style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-          <textarea
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            placeholder="Mensaje"
-            rows={5}
-            required
-            style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            style={{
-              padding: "10px 15px",
-              backgroundColor: isSubmitting ? "#ccc" : "#007BFF",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: isSubmitting ? "not-allowed" : "pointer",
-            }}
-          >
-            {isSubmitting ? "Enviando..." : "Enviar"}
-          </button>
-        </form>
-        {feedback && <p style={{ marginTop: "15px", color: feedback.includes("correctamente") ? "green" : "red" }}>{feedback}</p>}
-      </section>
+      <footer style={styles.footer}>
+        <p>© 2024 SellPhone. Todos los derechos reservados. Diseñado en Cancún, Q. Roo.</p>
+      </footer>
     </div>
   );
 };
