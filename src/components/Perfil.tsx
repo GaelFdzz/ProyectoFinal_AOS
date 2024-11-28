@@ -26,16 +26,18 @@ const Perfil: React.FC = () => {
 
   return (
     <div className="container">
-      <h1 className="title">Mi Perfil</h1>
-      <div className="profile-info">
-        <p><strong>Nombre:</strong> {userData.nombre || "No especificado"}</p>
-        <p><strong>Apellido:</strong> {userData.apellido || "No especificado"}</p>
-        <p><strong>Correo:</strong> {userData.correo || "No especificado"}</p>
-      </div>
-      <div className="button-container">
-        <button className="button save" onClick={handleEditarPerfil}>
-          Editar Perfil
-        </button>
+      <div className="container-perfil">
+        <h1 className="titlePerfil">Mi Perfil</h1>
+        <div className="profile-info">
+          <p><strong>Nombre:</strong> {userData.nombre || "No especificado"}</p>
+          <p><strong>Apellido:</strong> {userData.apellido || "No especificado"}</p>
+          <p><strong>Correo:</strong> {userData.correo || "No especificado"}</p>
+        </div>
+        <div className="button-container">
+          <button className="button save" onClick={handleEditarPerfil}>
+            Editar Perfil
+          </button>
+        </div>
       </div>
     </div>
   );

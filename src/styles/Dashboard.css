@@ -1,72 +1,73 @@
 .dashboard {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  h1 {
-    color: #333;
-  }
-  
-  .btn {
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    margin: 5px;
-  }
-  
-  .btn.add {
-    background-color: #ffd700;
-    color: #fff;
-  }
-  
-  .btn.edit {
-    background-color: #4caf50;
-    color: #fff;
-  }
-  
-  .btn.delete {
-    background-color: #f44336;
-    color: #fff;
-  }
-  
-  .btn.save {
-    background-color: #ffd700;
-    color: #fff;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  
-  table th,
-  table td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-  
-  .product-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-  }
-  
-  .form-container {
-    background-color: #f9f9f9;
-    padding: 20px;
-    margin: 20px 0;
-    border: 1px solid #ddd;
-  }
-  
-  form input,
-  form textarea,
-  form select {
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: white;
+}
+
+.dashboard h1 {
+  color: #333;
+  text-align: center;
+}
+
+.dashboard .btn {
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.dashboard .btn.add {
+  background-color: #ffd700;
+  color: #fff;
+}
+
+.dashboard .btn.edit {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.dashboard .btn.delete {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.dashboard .btn.save {
+  background-color: #ffd700;
+  color: #fff;
+}
+
+.dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.dashboard table th,
+.dashboard table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.dashboard .product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.dashboard .form-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #ddd;
+}
+
+.dashboard form input,
+.dashboard form textarea,
+.dashboard form select {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

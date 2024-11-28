@@ -26,39 +26,41 @@ const Carrito = () => {
   };
 
   return (
-    <div className="carrito-container">
-      <h1 className="carrito-header">Tu carrito</h1>
-      {productos.length > 0 ? (
-        <>
-          {productos.map((producto, index) => {
-            const precio = Number(producto.Precio); // Asegúrate de que el precio sea un número
-            const subtotal = isNaN(precio) ? 0 : precio * (producto.Cantidad || 1); // Manejamos el caso de NaN
+    <div className="container">
+      <div className="carrito-container">
+        <h1 className="carrito-header">Tu carrito</h1>
+        {productos.length > 0 ? (
+          <>
+            {productos.map((producto, index) => {
+              const precio = Number(producto.Precio); // Asegúrate de que el precio sea un número
+              const subtotal = isNaN(precio) ? 0 : precio * (producto.Cantidad || 1); // Manejamos el caso de NaN
 
-            return (
-              <div className="carrito-producto" key={index}>
-                <img
-                  src={`http://localhost:3000${producto.Imagen || '/iphone.png'}`}
-                  alt={producto.Nombre}
-                />
-                <div>
-                  <h2>{producto.Nombre}</h2>
-                  <p>{producto.Descripcion}</p>
-                  <p>Precio: ${precio.toFixed(2)}</p> {/* Aseguramos que el precio sea un número antes de usar toFixed */}
-                  <p>Cantidad: {producto.Cantidad}</p>
-                  <p>Subtotal: ${subtotal.toFixed(2)}</p>
+              return (
+                <div className="carrito-producto" key={index}>
+                  <img
+                    src={`http://localhost:3000${producto.Imagen || '/iphone.png'}`}
+                    alt={producto.Nombre}
+                  />
+                  <div>
+                    <h2>{producto.Nombre}</h2>
+                    <p>{producto.Descripcion}</p>
+                    <p>Precio: ${precio.toFixed(2)}</p> {/* Aseguramos que el precio sea un número antes de usar toFixed */}
+                    <p>Cantidad: {producto.Cantidad}</p>
+                    <p>Subtotal: ${subtotal.toFixed(2)}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-          <div className="carrito-total">
-            <h2>Total: ${total.toFixed(2)}</h2>
-          </div>
-          <button className="vaciar-carrito-btn" onClick={vaciarCarrito}>Vaciar carrito</button>
-          <button className="pagar-btn" onClick={manejarPago}>Pagar</button>
-        </>
-      ) : (
-        <p>Tu carrito está vacío</p>
-      )}
+              );
+            })}
+            <div className="carrito-total">
+              <h2>Total: ${total.toFixed(2)}</h2>
+            </div>
+            <button className="vaciar-carrito-btn" onClick={vaciarCarrito}>Vaciar carrito</button>
+            <button className="pagar-btn" onClick={manejarPago}>Pagar</button>
+          </>
+        ) : (
+          <p className='carritoVacio'>Tu carrito está vacío</p>
+        )}
+      </div>
     </div>
   );
 };
