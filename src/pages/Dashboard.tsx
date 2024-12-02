@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
         setFormData({ ...formData, image: file });
       } else {
         alert("Por favor, sube un archivo en formato .jpg o .png.");
-        // Limpia el valor del input para evitar la selección
+      
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -104,7 +104,7 @@ const Dashboard: React.FC = () => {
           <thead>
             <tr>
               <th>Producto</th>
-              <th>Descripción</th> {/* Nueva columna */}
+              <th>Descripción</th>
               <th>Imagen</th>
               <th>Existencias</th>
               <th>Precio</th>
