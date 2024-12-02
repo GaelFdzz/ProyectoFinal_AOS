@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { useState, useRef } from "react";
-=======
-import { useEffect, useState } from "react";
->>>>>>> 2f62dbe9157dc1cf72f4226eab97e6f94d60f7c3
 import "../styles/Dashboard.css";
-import axios from "axios";
 
 interface Product {
   id: number;
@@ -20,7 +15,6 @@ const Dashboard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-<<<<<<< HEAD
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<Product>({
     id: 0,
@@ -48,7 +42,7 @@ const Dashboard: React.FC = () => {
         setFormData({ ...formData, image: file });
       } else {
         alert("Por favor, sube un archivo en formato .jpg o .png.");
-      
+        // Limpia el valor del input para evitar la selección
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -97,131 +91,64 @@ const Dashboard: React.FC = () => {
 
   const handleDeleteProduct = (id: number) => {
     setProducts(products.filter((p) => p.id !== id));
-=======
-  const [editProduct, setEditProduct] = useState(null);
-  const [formData, setFormData] = useState({
-    Nombre: "",
-    Descripcion: "",
-    Precio: "",
-    Stock: "",
-    Categoria: "",
-    Imagen: null,
-  });
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/productos");
-      setProducts(response.data);
-    } catch (error) {
-      console.error("Error al cargar los productos:", error);
-    }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      Imagen: event.target.files ? event.target.files[0] : null,
-    }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const form = new FormData();
-    form.append("Nombre", formData.Nombre);
-    form.append("Descripcion", formData.Descripcion);
-    form.append("Precio", formData.Precio);
-    form.append("Stock", formData.Stock);
-    form.append("Categoria", formData.Categoria);
-    if (formData.Imagen) form.append("Imagen", formData.Imagen);
-
-    try {
-      await axios.post("http://localhost:3000/productos", form);
-      fetchProducts();
-      setShowAddForm(false);
-    } catch (error) {
-      console.error("Error al agregar producto:", error);
-    }
->>>>>>> 2f62dbe9157dc1cf72f4226eab97e6f94d60f7c3
   };
 
   return (
-    <div className="dashboard">
-      <h1>Dashboard de Productos</h1>
-      <button className="btn add" onClick={() => setShowAddForm(true)}>Añadir Producto</button>
-      {showAddForm && (
-        <div className="form-container">
-          <form onSubmit={handleSubmit}>
-            <label>Nombre:</label>
-            <input type="text" name="Nombre" onChange={handleInputChange} required />
-            <label>Descripción:</label>
-            <input type="text" name="Descripcion" onChange={handleInputChange} required />
-            <label>Precio:</label>
-            <input type="number" name="Precio" onChange={handleInputChange} required />
-            <label>Stock:</label>
-            <input type="number" name="Stock" onChange={handleInputChange} required />
-            <label>Categoría:</label>
-            <input type="text" name="Categoria" onChange={handleInputChange} required />
-            <label>Imagen:</label>
-            <input type="file" name="Imagen" onChange={handleFileChange} />
-            <button className="btn save" type="submit">Guardar</button>
-          </form>
-        </div>
-      )}
-      <div className="productList">
+    <div className="container">
+      <div className="dashboard">
+        <h1>Gestión de productos</h1>
+        <button className="btn add" onClick={() => setShowAddForm(true)}>
+          Agregar producto
+        </button>
         <table>
           <thead>
             <tr>
-<<<<<<< HEAD
               <th>Producto</th>
-              <th>Descripción</th>
-=======
->>>>>>> 2f62dbe9157dc1cf72f4226eab97e6f94d60f7c3
+              <th>Descripción</th> {/* Nueva columna */}
               <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
+              <th>Existencias</th>
               <th>Precio</th>
-              <th>Stock</th>
+              <th>Ventas</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
-<<<<<<< HEAD
               <tr key={product.id}>
                 <td>{product.name}</td>
                 <td>{product.description}</td> {/* Se muestra la descripción */}
-=======
-              <tr key={product.Id_Producto}>
->>>>>>> 2f62dbe9157dc1cf72f4226eab97e6f94d60f7c3
                 <td>
-                  <img src={`http://localhost:3000${product.Imagen || "/iphone.png"}`} alt={product.Nombre} className="product-image" />
+                  {product.image ? (
+                    <img
+                      src={URL.createObjectURL(product.image)}
+                      alt="Producto"
+                      className="product-image"
+                    />
+                  ) : (
+                    "Sin imagen"
+                  )}
                 </td>
-                <td>{product.Nombre}</td>
-                <td>{product.Descripcion}</td>
-                <td>{product.Precio}</td>
-                <td>{product.Stock}</td>
+                <td>{product.stock}</td>
+                <td>${product.price} MXN</td>
+                <td>0</td>
                 <td>
-                  <button className="btn edit" onClick={() => setShowEditForm(true)}>Editar</button>
-                  <button className="btn delete">Eliminar</button>
+                  <button
+                    className="btn edit"
+                    onClick={() => handleEditProduct(product)}
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    className="btn delete"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-<<<<<<< HEAD
 
         {showAddForm && (
           <div className="form-container">
@@ -336,8 +263,6 @@ const Dashboard: React.FC = () => {
             </form>
           </div>
         )}
-=======
->>>>>>> 2f62dbe9157dc1cf72f4226eab97e6f94d60f7c3
       </div>
     </div>
   );
