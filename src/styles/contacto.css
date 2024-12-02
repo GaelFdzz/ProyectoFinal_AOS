@@ -1,0 +1,124 @@
+/* General */
+/* Sección del mapa */
+.map-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.map-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+iframe {
+    border-radius: 10px;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    color: #333;
+}
+
+/* Contenedor principal */
+.contacto .container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tarjetas */
+.contact-card,
+.social-card {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Títulos */
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.social-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+/* Texto */
+.text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+/* Lista de contactos */
+.contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.contact-list li {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.contact-list strong {
+    color: #2c3e50;
+}
+
+/* Redes sociales */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social-icon {
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+.social-icon.facebook {
+    background: #3b5998;
+}
+
+.social-icon.twitter {
+    background: #1da1f2;
+}
+
+.social-icon.instagram {
+    background: #e4405f;
+}
+
+.social-icon:hover {
+    opacity: 0.9;
+}

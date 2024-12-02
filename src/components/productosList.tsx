@@ -1,46 +1,73 @@
-import { useEffect, useState } from 'react';
-import "../styles/productsList.css";
+import React, { useEffect } from "react";
+import "../styles/contactPage.css";
 
-const Catalogo = () => {
-  const [productos, setProductos] = useState([]);
+const ContactPage = () => {
+  useEffect(() => {
+    // Script para Tawk.to
+    const tawkScript = document.createElement("script");
+    tawkScript.src = "https://embed.tawk.to/674514942480f5b4f5a4080f/1iditgp02";
+    tawkScript.async = true;
+    tawkScript.charset = "UTF-8";
+    tawkScript.setAttribute("crossorigin", "*");
+    document.body.appendChild(tawkScript);
+
+    return () => {
+      document.body.removeChild(tawkScript);
+    };
+  }, []);
 
   useEffect(() => {
-    const obtenerProductos = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/productos');
-        const data = await response.json();
-        setProductos(data);
-      } catch (error) {
-        console.error('Error al obtener los productos:', error);
-      }
-    };
+    // Cargar fuente Roboto
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
 
-    obtenerProductos();
+    return () => {
+      document.head.removeChild(link);
+    };
   }, []);
 
   return (
-    <div>
-      <div className='productsList'>
-        {productos.length > 0 ? (
-          productos.map((producto) => (
-            <div className='productSale' key={producto.Id_Producto}>
-              <img
-                src={`http://localhost:3000${producto.Imagen || '/iphone.png'}`}
-                alt={producto.Nombre}
-                className="productImage"
-              />
-              <h2>{producto.Nombre}</h2>
-              <p>{producto.Descripcion}</p>
-              <p>Precio: {producto.Precio}</p>
-              <p>Stock: {producto.Stock}</p>
-            </div>
-          ))
-        ) : (
-          <p>No hay productos disponibles</p>
-        )}
-      </div>
+    <div className="contactContainer">
+      <header className="contactHeader">
+        <h1 className="contactTitle">SellPhone</h1>
+      </header>
+      <section className="contactSection">
+        <h2 className="contactSubtitle">¿Necesitas ayuda?</h2>
+        <p className="contactText">
+          Estamos aquí para ayudarte. Usa nuestro chat en vivo para obtener soporte en tiempo real. Haz clic en el ícono
+          de chat en la esquina inferior derecha para comenzar.
+        </p>
+        <p className="contactText">Si prefieres contactarnos por otros medios:</p>
+        <ul className="contactList">
+          <li>
+            <strong>Email:</strong> sellphonecun@gmail.com
+          </li>
+          <li>
+            <strong>Teléfono:</strong> 9985396831
+          </li>
+          <li>
+            <strong>Ubicación:</strong> Cancún, Q. Roo, Benito Juárez
+          </li>
+        </ul>
+        <div className="socialContainer">
+          <h3>¡Síguenos en redes sociales!</h3>
+          <div className="socialLinks">
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="socialLink">
+              📘 Facebook
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="socialLink">
+              🐦 Twitter
+            </a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="socialLink">
+              📸 Instagram
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
 
-export default Catalogo;
+export default ContactPage;
