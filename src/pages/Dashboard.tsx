@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
+import axios from "axios";
 
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
@@ -7,224 +8,115 @@ const Dashboard = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    stock: "",
-    category: "",
-    image: null,
+    Nombre: "",
+    Descripcion: "",
+    Precio: "",
+    Stock: "",
+    Categoria: "",
+    Imagen: null,
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/productos");
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error al cargar los productos:", error);
+    }
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleAddProduct = () => {
-    setProducts([...products, { ...formData, id: Date.now() }]);
-    setFormData({
-      name: "",
-      description: "",
-      price: "",
-      stock: "",
-      category: "",
-      image: null,
-    });
-    setShowAddForm(false);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      Imagen: event.target.files ? event.target.files[0] : null,
+    }));
   };
 
-  const handleEditProduct = (product) => {
-    setEditProduct(product);
-    setFormData(product);
-    setShowEditForm(true);
-  };
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-  const handleSaveEdit = () => {
-    setProducts(
-      products.map((p) =>
-        p.id === editProduct.id ? { ...editProduct, ...formData } : p
-      )
-    );
-    setEditProduct(null);
-    setFormData({
-      name: "",
-      description: "",
-      price: "",
-      stock: "",
-      category: "",
-      image: null,
-    });
-    setShowEditForm(false);
-  };
+    const form = new FormData();
+    form.append("Nombre", formData.Nombre);
+    form.append("Descripcion", formData.Descripcion);
+    form.append("Precio", formData.Precio);
+    form.append("Stock", formData.Stock);
+    form.append("Categoria", formData.Categoria);
+    if (formData.Imagen) form.append("Imagen", formData.Imagen);
 
-  const handleDeleteProduct = (id) => {
-    setProducts(products.filter((p) => p.id !== id));
+    try {
+      await axios.post("http://localhost:3000/productos", form);
+      fetchProducts();
+      setShowAddForm(false);
+    } catch (error) {
+      console.error("Error al agregar producto:", error);
+    }
   };
 
   return (
-    <div className="container">
-      <div className="dashboard">
-        <h1>Gestión de productos</h1>
-        <button className="btn add" onClick={() => setShowAddForm(true)}>
-          Agregar producto
-        </button>
+    <div className="dashboard">
+      <h1>Dashboard de Productos</h1>
+      <button className="btn add" onClick={() => setShowAddForm(true)}>Añadir Producto</button>
+      {showAddForm && (
+        <div className="form-container">
+          <form onSubmit={handleSubmit}>
+            <label>Nombre:</label>
+            <input type="text" name="Nombre" onChange={handleInputChange} required />
+            <label>Descripción:</label>
+            <input type="text" name="Descripcion" onChange={handleInputChange} required />
+            <label>Precio:</label>
+            <input type="number" name="Precio" onChange={handleInputChange} required />
+            <label>Stock:</label>
+            <input type="number" name="Stock" onChange={handleInputChange} required />
+            <label>Categoría:</label>
+            <input type="text" name="Categoria" onChange={handleInputChange} required />
+            <label>Imagen:</label>
+            <input type="file" name="Imagen" onChange={handleFileChange} />
+            <button className="btn save" type="submit">Guardar</button>
+          </form>
+        </div>
+      )}
+      <div className="productList">
         <table>
           <thead>
             <tr>
-              <th>Producto</th>
               <th>Imagen</th>
-              <th>Existencias</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
               <th>Precio</th>
-              <th>Ventas</th>
+              <th>Stock</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
+              <tr key={product.Id_Producto}>
                 <td>
-                  {product.image ? (
-                    <img
-                      src={URL.createObjectURL(product.image)}
-                      alt="Producto"
-                      className="product-image"
-                    />
-                  ) : (
-                    "Sin imagen"
-                  )}
+                  <img src={`http://localhost:3000${product.Imagen || "/iphone.png"}`} alt={product.Nombre} className="product-image" />
                 </td>
-                <td>{product.stock}</td>
-                <td>${product.price} MXN</td>
-                <td>0</td>
+                <td>{product.Nombre}</td>
+                <td>{product.Descripcion}</td>
+                <td>{product.Precio}</td>
+                <td>{product.Stock}</td>
                 <td>
-                  <button
-                    className="btn edit"
-                    onClick={() => handleEditProduct(product)}
-                  >
-                    Modificar
-                  </button>
-                  <button
-                    className="btn delete"
-                    onClick={() => handleDeleteProduct(product.id)}
-                  >
-                    Eliminar
-                  </button>
+                  <button className="btn edit" onClick={() => setShowEditForm(true)}>Editar</button>
+                  <button className="btn delete">Eliminar</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-
-        {showAddForm && (
-          <div className="form-container">
-            <h2>Registrar nuevo producto</h2>
-            <form>
-              <input
-                type="text"
-                name="name"
-                placeholder="Nombre del producto"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-              <textarea
-                name="description"
-                placeholder="Descripción"
-                value={formData.description}
-                onChange={handleInputChange}
-              />
-              <input
-                type="number"
-                name="price"
-                placeholder="Precio"
-                value={formData.price}
-                onChange={handleInputChange}
-              />
-              <input
-                type="number"
-                name="stock"
-                placeholder="Stock"
-                value={formData.stock}
-                onChange={handleInputChange}
-              />
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-              >
-                <option value="">Selecciona una categoría</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Tablets">Tablets</option>
-                <option value="Accesorios">Accesorios</option>
-              </select>
-              <input type="file" onChange={handleFileChange} />
-              <button
-                type="button"
-                className="btn save"
-                onClick={handleAddProduct}
-              >
-                Agregar producto
-              </button>
-            </form>
-          </div>
-        )}
-
-        {showEditForm && (
-          <div className="form-container">
-            <h2>Modificar producto</h2>
-            <form>
-              <input
-                type="text"
-                name="name"
-                placeholder="Nombre del producto"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-              <textarea
-                name="description"
-                placeholder="Descripción"
-                value={formData.description}
-                onChange={handleInputChange}
-              />
-              <input
-                type="number"
-                name="price"
-                placeholder="Precio"
-                value={formData.price}
-                onChange={handleInputChange}
-              />
-              <input
-                type="number"
-                name="stock"
-                placeholder="Stock"
-                value={formData.stock}
-                onChange={handleInputChange}
-              />
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-              >
-                <option value="">Selecciona una categoría</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Tablets">Tablets</option>
-                <option value="Accesorios">Accesorios</option>
-              </select>
-              <input type="file" onChange={handleFileChange} />
-              <button
-                type="button"
-                className="btn save"
-                onClick={handleSaveEdit}
-              >
-                Guardar cambios
-              </button>
-            </form>
-          </div>
-        )}
       </div>
     </div>
   );
