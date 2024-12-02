@@ -1,14 +1,6 @@
-    /* General */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "Roboto", sans-serif;
-    background-color: #f4f4f9; /* Fondo suave */
-    color: #333; /* Texto en tono gris oscuro */
-}
 
 /* Contenedor principal */
-.container {
+.container .container-perfil{
     max-width: 600px;
     margin: 3rem auto;
     padding: 2rem;
@@ -18,7 +10,7 @@ body {
 }
 
 /* Título */
-.title {
+.container-perfil .titlePerfil {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 2rem;
@@ -27,14 +19,14 @@ body {
 }
 
 /* Formulario */
-label {
+.container-perfil .profile-info label {
     display: block;
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: #555; /* Tono gris suave */
 }
 
-input {
+.container-perfil .profile-info input {
     width: 100%;
     padding: 0.75rem;
     margin-bottom: 1.5rem;
@@ -44,13 +36,13 @@ input {
     transition: border-color 0.3s ease;
 }
 
-input:focus {
+.container-perfil .profile-info input:focus {
     border-color: #fcd116; /* Amarillo de enfoque */
     outline: none;
 }
 
 /* Botones */
-.button {
+.container-perfil .profile-info .button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
@@ -62,33 +54,33 @@ input:focus {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.button.save {
+.container-perfil .button.save {
     background-color: #fcd116; /* Amarillo vibrante */
     color: #000;
 }
 
-.button.save:hover {
+.container-perfil .button.save:hover {
     background-color: #e5b60f; /* Amarillo más oscuro */
     transform: translateY(-2px); /* Efecto sutil al pasar el mouse */
 }
 
-.button.cancel {
+.container-perfil .button.cancel {
     background-color: #7a7a7a; /* Gris oscuro */
     color: #fff;
 }
 
-.button.cancel:hover {
+.container-perfil .button.cancel:hover {
     background-color: #6c6c6c; /* Gris más oscuro */
     transform: translateY(-2px); /* Efecto sutil al pasar el mouse */
 }
 
 /* Botones - separación */
-.button:not(:last-child) {
+.container-perfil .button:not(:last-child) {
     margin-right: 1rem;
 }
 
 /* Centrado de los botones */
-.button-container {
+.container-perfil .button-container {
   display: flex;
   justify-content: center;
   gap: 1rem; /* Espacio entre los botones */
