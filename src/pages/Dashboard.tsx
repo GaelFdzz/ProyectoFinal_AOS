@@ -1,109 +1,96 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState, useRef } from "react";
 import "../styles/Dashboard.css";
 
-const Dashboard = () => {
-  const [products, setProducts] = useState<any[]>([]);
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  stock: string;
+  category: string;
+  image: File | null;
+}
+
+const Dashboard: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [editProduct, setEditProduct] = useState<any | null>(null);
-  const [formData, setFormData] = useState({
-    Nombre: "",
-    Descripcion: "",
-    Precio: "",
-    Stock: "",
-    Categoria: "",
-    Imagen: null,
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [formData, setFormData] = useState<Product>({
+    id: 0,
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    category: "",
+    image: null,
   });
-  const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // Referencia para el input de archivo
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/productos");
-      setProducts(response.data);
-    } catch (error) {
-      console.error("Error al cargar los productos:", error);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, Imagen: e.target.files ? e.target.files[0] : null });
-  };
-
-  // Añadir producto
-  const handleAddProduct = async () => {
-    const form = new FormData();
-    form.append("Nombre", formData.Nombre);
-    form.append("Descripcion", formData.Descripcion);
-    form.append("Precio", formData.Precio);
-    form.append("Stock", formData.Stock);
-    form.append("Categoria", formData.Categoria);
-    if (formData.Imagen) form.append("Imagen", formData.Imagen);
-
-    try {
-      await axios.post("http://localhost:3000/productos", form);
-      fetchProducts();  // Recarga los productos
-      setShowAddForm(false);  // Cierra el formulario
-    } catch (error) {
-      console.error("Error al agregar producto:", error);
+    const file = e.target.files?.[0];
+    if (file) {
+      const allowedFormats = ["image/jpeg", "image/png"];
+      if (allowedFormats.includes(file.type)) {
+        setFormData({ ...formData, image: file });
+      } else {
+        alert("Por favor, sube un archivo en formato .jpg o .png.");
+        // Limpia el valor del input para evitar la selección
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
     }
   };
 
-  // Editar producto
-  const handleEditProduct = (product: any) => {
-    setEditProduct(product);
+  const handleAddProduct = () => {
+    setProducts([...products, { ...formData, id: Date.now() }]);
     setFormData({
-      Nombre: product.Nombre,
-      Descripcion: product.Descripcion,
-      Precio: product.Precio,
-      Stock: product.Stock,
-      Categoria: product.Categoria,
-      Imagen: null,
+      id: 0,
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
+      category: "",
+      image: null,
     });
+    setShowAddForm(false);
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditProduct(product);
+    setFormData(product);
     setShowEditForm(true);
   };
 
-  const handleSaveEdit = async () => {
-    const form = new FormData();
-    form.append("Nombre", formData.Nombre);
-    form.append("Descripcion", formData.Descripcion);
-    form.append("Precio", formData.Precio);
-    form.append("Stock", formData.Stock);
-    form.append("Categoria", formData.Categoria);
-    if (formData.Imagen) form.append("Imagen", formData.Imagen);
-
-    try {
-      await axios.put(`http://localhost:3000/productos/${editProduct.Id_Producto}`, form);
-      fetchProducts();  // Recarga los productos
-      setShowEditForm(false);  // Cierra el formulario de edición
-      setEditProduct(null);  // Limpia la edición
-    } catch (error) {
-      console.error("Error al modificar producto:", error);
-    }
+  const handleSaveEdit = () => {
+    setProducts(
+      products.map((p) =>
+        p.id === editProduct?.id ? { ...editProduct, ...formData } : p
+      )
+    );
+    setEditProduct(null);
+    setFormData({
+      id: 0,
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
+      category: "",
+      image: null,
+    });
+    setShowEditForm(false);
   };
 
-  // Eliminar producto con confirmación
-  const handleDeleteProduct = async (productId: number) => {
-    if (confirmDelete === productId) {
-      try {
-        await axios.delete(`http://localhost:3000/productos/${productId}`);
-        fetchProducts();  // Recarga los productos
-        setConfirmDelete(null);  // Resetea la confirmación de eliminación
-      } catch (error) {
-        console.error("Error al eliminar producto:", error);
-      }
-    } else {
-      setConfirmDelete(productId);
-    }
+  const handleDeleteProduct = (id: number) => {
+    setProducts(products.filter((p) => p.id !== id));
   };
 
   return (
@@ -113,11 +100,11 @@ const Dashboard = () => {
         <button className="btn add" onClick={() => setShowAddForm(true)}>
           Agregar producto
         </button>
-
         <table>
           <thead>
             <tr>
               <th>Producto</th>
+              <th>Descripción</th> {/* Nueva columna */}
               <th>Imagen</th>
               <th>Existencias</th>
               <th>Precio</th>
@@ -127,21 +114,22 @@ const Dashboard = () => {
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.Id_Producto}>
-                <td>{product.Nombre}</td>
+              <tr key={product.id}>
+                <td>{product.name}</td>
+                <td>{product.description}</td> {/* Se muestra la descripción */}
                 <td>
-                  {product.Imagen ? (
+                  {product.image ? (
                     <img
-                      src={`http://localhost:3000${product.Imagen}`}
-                      alt={product.Nombre}
+                      src={URL.createObjectURL(product.image)}
+                      alt="Producto"
                       className="product-image"
                     />
                   ) : (
                     "Sin imagen"
                   )}
                 </td>
-                <td>{product.Stock}</td>
-                <td>${product.Precio} MXN</td>
+                <td>{product.stock}</td>
+                <td>${product.price} MXN</td>
                 <td>0</td>
                 <td>
                   <button
@@ -152,9 +140,9 @@ const Dashboard = () => {
                   </button>
                   <button
                     className="btn delete"
-                    onClick={() => handleDeleteProduct(product.Id_Producto)}
+                    onClick={() => handleDeleteProduct(product.id)}
                   >
-                    {confirmDelete === product.Id_Producto ? "Confirmar" : "Eliminar"}
+                    Eliminar
                   </button>
                 </td>
               </tr>
@@ -168,34 +156,34 @@ const Dashboard = () => {
             <form>
               <input
                 type="text"
-                name="Nombre"
+                name="name"
                 placeholder="Nombre del producto"
-                value={formData.Nombre}
+                value={formData.name}
                 onChange={handleInputChange}
               />
               <textarea
-                name="Descripcion"
+                name="description"
                 placeholder="Descripción"
-                value={formData.Descripcion}
+                value={formData.description}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="Precio"
+                name="price"
                 placeholder="Precio"
-                value={formData.Precio}
+                value={formData.price}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="Stock"
+                name="stock"
                 placeholder="Stock"
-                value={formData.Stock}
+                value={formData.stock}
                 onChange={handleInputChange}
               />
               <select
-                name="Categoria"
-                value={formData.Categoria}
+                name="category"
+                value={formData.category}
                 onChange={handleInputChange}
               >
                 <option value="">Selecciona una categoría</option>
@@ -203,7 +191,11 @@ const Dashboard = () => {
                 <option value="Tablets">Tablets</option>
                 <option value="Accesorios">Accesorios</option>
               </select>
-              <input type="file" onChange={handleFileChange} />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
               <button
                 type="button"
                 className="btn save"
@@ -221,34 +213,34 @@ const Dashboard = () => {
             <form>
               <input
                 type="text"
-                name="Nombre"
+                name="name"
                 placeholder="Nombre del producto"
-                value={formData.Nombre}
+                value={formData.name}
                 onChange={handleInputChange}
               />
               <textarea
-                name="Descripcion"
+                name="description"
                 placeholder="Descripción"
-                value={formData.Descripcion}
+                value={formData.description}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="Precio"
+                name="price"
                 placeholder="Precio"
-                value={formData.Precio}
+                value={formData.price}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="Stock"
+                name="stock"
                 placeholder="Stock"
-                value={formData.Stock}
+                value={formData.stock}
                 onChange={handleInputChange}
               />
               <select
-                name="Categoria"
-                value={formData.Categoria}
+                name="category"
+                value={formData.category}
                 onChange={handleInputChange}
               >
                 <option value="">Selecciona una categoría</option>
@@ -256,7 +248,11 @@ const Dashboard = () => {
                 <option value="Tablets">Tablets</option>
                 <option value="Accesorios">Accesorios</option>
               </select>
-              <input type="file" onChange={handleFileChange} />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
               <button
                 type="button"
                 className="btn save"
