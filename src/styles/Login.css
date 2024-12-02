@@ -48,16 +48,17 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #ffd600;
   }
   
   .btn-login {
     background-color: #ff5c5c;
-    color: white;
+    color: black;
   }
   
   .btn-register {
     background-color: #ff5c5c;
-    color: white;
+    color: black;
   }
   
   .welcome {
