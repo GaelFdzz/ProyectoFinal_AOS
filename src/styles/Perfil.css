@@ -1,30 +1,25 @@
-
-
-/* Contenedor principal */
 .container .container-perfil{
     max-width: 600px;
     margin: 3rem auto;
     padding: 2rem;
     background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Título */
 .container-perfil .titlePerfil {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 2rem;
-    color: #222; /* Texto más fuerte */
+    color: #222;
     text-align: center;
 }
 
-/* Formulario */
 .container-perfil .profile-info label {
     display: block;
     font-size: 1rem;
     margin-bottom: 0.5rem;
-    color: #555; /* Tono gris suave */
+    color: #555;
 }
 
 .container-perfil .profile-info input {
@@ -38,11 +33,10 @@
 }
 
 .container-perfil .profile-info input:focus {
-    border-color: #fcd116; /* Amarillo de enfoque */
+    border-color: #fcd116;
     outline: none;
 }
 
-/* Botones */
 .container-perfil .profile-info .button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -56,34 +50,45 @@
 }
 
 .container-perfil .button.save {
-    background-color: #fcd116; /* Amarillo vibrante */
+    background-color: #fcd116;
     color: #000;
 }
 
 .container-perfil .button.save:hover {
-    background-color: #e5b60f; /* Amarillo más oscuro */
-    transform: translateY(-2px); /* Efecto sutil al pasar el mouse */
+    background-color: #e5b60f;
+    transform: translateY(-2px);
 }
 
 .container-perfil .button.cancel {
-    background-color: #7a7a7a; /* Gris oscuro */
+    background-color: #7a7a7a;
     color: #fff;
 }
 
 .container-perfil .button.cancel:hover {
-    background-color: #6c6c6c; /* Gris más oscuro */
-    transform: translateY(-2px); /* Efecto sutil al pasar el mouse */
+    background-color: #6c6c6c;
+    transform: translateY(-2px);
 }
 
-/* Botones - separación */
 .container-perfil .button:not(:last-child) {
     margin-right: 1rem;
 }
 
-/* Centrado de los botones */
 .container-perfil .button-container {
   display: flex;
   justify-content: center;
-  gap: 1rem; /* Espacio entre los botones */
-  margin-top: 2rem; /* Margen superior para separar los botones de los campos del formulario */
+  gap: 1rem;
+  margin-top: 2rem;
+  border: none;
+  justify-content: center;
+}
+
+.container-perfil .button-container button{
+    border: none;
+    padding: 7px 15px;
+    border-radius: 5px;
+}
+
+.container-perfil .formEditarPerfil form{
+    display: grid;
+    gap: 10px;
 }
