@@ -26,7 +26,6 @@ const Dashboard: React.FC = () => {
     image: null,
   });
 
-  // Referencia para el input de archivo
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -42,7 +41,6 @@ const Dashboard: React.FC = () => {
         setFormData({ ...formData, image: file });
       } else {
         alert("Por favor, sube un archivo en formato .jpg o .png.");
-        // Limpia el valor del input para evitar la selección
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -104,7 +102,7 @@ const Dashboard: React.FC = () => {
           <thead>
             <tr>
               <th>Producto</th>
-              <th>Descripción</th> {/* Nueva columna */}
+              <th>Descripción</th>
               <th>Imagen</th>
               <th>Existencias</th>
               <th>Precio</th>
@@ -116,7 +114,7 @@ const Dashboard: React.FC = () => {
             {products.map((product) => (
               <tr key={product.id}>
                 <td>{product.name}</td>
-                <td>{product.description}</td> {/* Se muestra la descripción */}
+                <td>{product.description}</td>
                 <td>
                   {product.image ? (
                     <img
@@ -177,7 +175,7 @@ const Dashboard: React.FC = () => {
               <input
                 type="number"
                 name="stock"
-                placeholder="Stock"
+                placeholder="Existencias"
                 value={formData.stock}
                 onChange={handleInputChange}
               />
@@ -187,21 +185,24 @@ const Dashboard: React.FC = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Selecciona una categoría</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Tablets">Tablets</option>
+                <option value="Electronica">Electrónica</option>
                 <option value="Accesorios">Accesorios</option>
+                <option value="Celulares">Celulares</option>
               </select>
               <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileChange}
               />
+              <button type="button" className="btn save" onClick={handleAddProduct}>
+                Guardar
+              </button>
               <button
                 type="button"
-                className="btn save"
-                onClick={handleAddProduct}
+                className="btn cancel"
+                onClick={() => setShowAddForm(false)}
               >
-                Agregar producto
+                Cancelar
               </button>
             </form>
           </div>
@@ -234,7 +235,7 @@ const Dashboard: React.FC = () => {
               <input
                 type="number"
                 name="stock"
-                placeholder="Stock"
+                placeholder="Existencias"
                 value={formData.stock}
                 onChange={handleInputChange}
               />
@@ -244,9 +245,9 @@ const Dashboard: React.FC = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Selecciona una categoría</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Tablets">Tablets</option>
+                <option value="Electronica">Electrónica</option>
                 <option value="Accesorios">Accesorios</option>
+                <option value="Celulares">Celulares</option>
               </select>
               <input
                 type="file"
@@ -259,6 +260,13 @@ const Dashboard: React.FC = () => {
                 onClick={handleSaveEdit}
               >
                 Guardar cambios
+              </button>
+              <button
+                type="button"
+                className="btn cancel"
+                onClick={() => setShowEditForm(false)}
+              >
+                Cancelar
               </button>
             </form>
           </div>
