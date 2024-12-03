@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import "../styles/Dashboard.css";
-// Holaasdasd
 
 interface Product {
   id: number;

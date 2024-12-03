@@ -65,12 +65,22 @@ export const CarritoProvider: React.FC<{ children: ReactNode }> = ({ children })
       return;
     }
 
-    // Asegurarse de que los productos estén correctamente formateados
+    // Validar que todos los productos tengan los campos necesarios
     const productosAEnviar = productos.map((producto) => ({
       Id_Producto: producto.Id_Producto,
-      Cantidad: producto.Cantidad || 1,
-      Precio: producto.Precio,
+      Cantidad: producto.Cantidad || 1, // Default a 1 si no está definido
+      Precio: producto.Precio || 0,    // Default a 0 si no está definido
     }));
+
+    // Validar que los productos tengan un formato válido
+    const productosInvalidos = productosAEnviar.filter(
+      (producto) => !producto.Id_Producto || producto.Precio === null
+    );
+
+    if (productosInvalidos.length > 0) {
+      console.error('Hay productos inválidos en el carrito:', productosInvalidos);
+      return;
+    }
 
     try {
       const response = await fetch(`http://localhost:3000/carrito/${userId}`, {
@@ -78,7 +88,7 @@ export const CarritoProvider: React.FC<{ children: ReactNode }> = ({ children })
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productos: productosAEnviar }),  // Asegúrate de que "productos" sea un arreglo
+        body: JSON.stringify({ productos: productosAEnviar }),
       });
 
       if (!response.ok) {
@@ -91,6 +101,7 @@ export const CarritoProvider: React.FC<{ children: ReactNode }> = ({ children })
       console.error('Error al guardar el carrito:', error);
     }
   };
+
 
   const agregarAlCarrito = (producto: Producto) => {
     setProductos((prevProductos) => {

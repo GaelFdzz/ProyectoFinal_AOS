@@ -1,0 +1,77 @@
+.perfil-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: white;
+    /* Fondo blanco */
+}
+
+.perfil-box {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    border: 2px solid #f1c40f;
+    /* Borde amarillo más brillante */
+}
+
+.perfil-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: black;
+    /* Texto en negro */
+    font-weight: 600;
+}
+
+.perfil-info {
+    font-size: 1.2rem;
+    color: #666;
+    /* Color gris claro para la información */
+    margin-bottom: 20px;
+}
+
+.perfil-foto {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.perfil-foto-img {
+    width: 300px;
+    /* Ajusta el tamaño de la imagen */
+    height: 300px;
+    /* Mantén la proporción */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f1c40f;
+    /* Borde amarillo más brillante alrededor de la foto */
+}
+
+.perfil-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    /* Espacio arriba del botón */
+}
+
+.perfil-button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #f1c40f;
+    /* Botón amarillo más brillante */
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.perfil-button:hover {
+    background-color: #f39c12;
+    /* Amarillo más oscuro en hover */
+    opacity: 0.9;
+}
