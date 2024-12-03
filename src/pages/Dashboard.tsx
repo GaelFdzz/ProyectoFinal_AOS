@@ -1,48 +1,52 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import axios from "axios"; // Importamos Axios
 import "../styles/Dashboard.css";
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  stock: string;
-  category: string;
-  image: File | null;
-}
+import { Producto } from '../interfaces/producto';
 
 const Dashboard: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Producto[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [editProduct, setEditProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState<Product>({
-    id: 0,
-    name: "",
-    description: "",
-    price: "",
-    stock: "",
+  const [editProduct, setEditProduct] = useState<Producto | null>(null);
+  const [formData, setFormData] = useState<Producto>({
+    Id_Producto: 0,
+    Nombre: "",
+    Descripcion: "",
+    Precio: 0, // Cambiado a número
+    Stock: 0,  // Cambiado a número
     category: "",
-    image: null,
+    Imagen: null,
   });
 
   // Referencia para el input de archivo
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Obtener productos desde el backend
+  useEffect(() => {
+    axios.get("http://localhost:3000/productos")
+      .then(response => {
+        setProducts(response.data);
+      })
+      .catch(error => {
+        console.error("Error al obtener los productos", error);
+      });
+  }, []);
+
+  // Manejar cambios en los campos del formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Manejar cambio de archivo (imagen)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const allowedFormats = ["image/jpeg", "image/png"];
       if (allowedFormats.includes(file.type)) {
-        setFormData({ ...formData, image: file });
+        setFormData({ ...formData, Imagen: file });
       } else {
         alert("Por favor, sube un archivo en formato .jpg o .png.");
-        // Limpia el valor del input para evitar la selección
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -50,47 +54,91 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  // Agregar nuevo producto (POST)
   const handleAddProduct = () => {
-    setProducts([...products, { ...formData, id: Date.now() }]);
-    setFormData({
-      id: 0,
-      name: "",
-      description: "",
-      price: "",
-      stock: "",
-      category: "",
-      image: null,
-    });
-    setShowAddForm(false);
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.Nombre);
+    formDataToSend.append("description", formData.Descripcion);
+    formDataToSend.append("price", formData.Precio.toString());
+    formDataToSend.append("stock", formData.Stock.toString());
+    formDataToSend.append("category", formData.category);
+    if (formData.Imagen) {
+      formDataToSend.append("imagen", formData.Imagen);
+    }
+
+    axios.post("http://localhost:3000/productos", formDataToSend)
+      .then(response => {
+        setProducts(prevState => [...prevState, response.data]);
+        setFormData({
+          Id_Producto: 0,
+          Nombre: "",
+          Descripcion: "",
+          Precio: 0,
+          Stock: 0,
+          category: "",
+          Imagen: null,
+        });
+        setShowAddForm(false);
+      })
+      .catch(error => {
+        console.error("Error al agregar el producto", error);
+      });
   };
 
-  const handleEditProduct = (product: Product) => {
-    setEditProduct(product);
-    setFormData(product);
-    setShowEditForm(true);
+  // Editar producto (PUT)
+  const handleEditProduct = (product: Producto) => {
+    setEditProduct(product);  // Actualiza el producto a editar
+    setFormData(product);      // Prellena el formulario con los datos actuales del producto
+    setShowEditForm(true);     // Muestra el formulario de edición
   };
 
   const handleSaveEdit = () => {
-    setProducts(
-      products.map((p) =>
-        p.id === editProduct?.id ? { ...editProduct, ...formData } : p
-      )
-    );
-    setEditProduct(null);
-    setFormData({
-      id: 0,
-      name: "",
-      description: "",
-      price: "",
-      stock: "",
-      category: "",
-      image: null,
-    });
-    setShowEditForm(false);
+    if (!editProduct) {
+      console.error("No hay producto seleccionado para editar");
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.Nombre);
+    formDataToSend.append("description", formData.Descripcion);
+    formDataToSend.append("price", formData.Precio.toString());
+    formDataToSend.append("stock", formData.Stock.toString());
+    formDataToSend.append("category", formData.category);
+    if (formData.Imagen) {
+      formDataToSend.append("imagen", formData.Imagen);
+    }
+
+    axios.put(`http://localhost:3000/productos/${editProduct.Id_Producto}`, formDataToSend)
+      .then(response => {
+        setProducts(prevState =>
+          prevState.map(p => (p.Id_Producto === editProduct.Id_Producto ? response.data : p))
+        );
+        setEditProduct(null);
+        setFormData({
+          Id_Producto: 0,
+          Nombre: "",
+          Descripcion: "",
+          Precio: 0,
+          Stock: 0,
+          category: "",
+          Imagen: null,
+        });
+        setShowEditForm(false);
+      })
+      .catch(error => {
+        console.error("Error al actualizar el producto", error);
+      });
   };
 
-  const handleDeleteProduct = (id: number) => {
-    setProducts(products.filter((p) => p.id !== id));
+  // Eliminar producto (DELETE)
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:3000/productos/${id}`);
+      console.log('Producto eliminado');
+      // Actualizar la UI después de la eliminación (por ejemplo, removiendo el producto de la lista)
+    } catch (error) {
+      console.error('Error al eliminar el producto', error);
+    }
   };
 
   return (
@@ -104,7 +152,7 @@ const Dashboard: React.FC = () => {
           <thead>
             <tr>
               <th>Producto</th>
-              <th>Descripción</th> {/* Nueva columna */}
+              <th>Descripción</th>
               <th>Imagen</th>
               <th>Existencias</th>
               <th>Precio</th>
@@ -114,13 +162,13 @@ const Dashboard: React.FC = () => {
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>{product.description}</td> {/* Se muestra la descripción */}
+              <tr key={product.Id_Producto}>
+                <td>{product.Nombre}</td>
+                <td>{product.Descripcion}</td>
                 <td>
-                  {product.image ? (
+                  {product.Imagen ? (
                     <img
-                      src={URL.createObjectURL(product.image)}
+                      src={`http://localhost:3000${product.Imagen}`}
                       alt="Producto"
                       className="product-image"
                     />
@@ -128,8 +176,8 @@ const Dashboard: React.FC = () => {
                     "Sin imagen"
                   )}
                 </td>
-                <td>{product.stock}</td>
-                <td>${product.price} MXN</td>
+                <td>{product.Stock}</td>
+                <td>${product.Precio} MXN</td>
                 <td>0</td>
                 <td>
                   <button
@@ -140,7 +188,7 @@ const Dashboard: React.FC = () => {
                   </button>
                   <button
                     className="btn delete"
-                    onClick={() => handleDeleteProduct(product.id)}
+                    onClick={() => handleDeleteProduct(product.Id_Producto)}
                   >
                     Eliminar
                   </button>
@@ -156,29 +204,29 @@ const Dashboard: React.FC = () => {
             <form>
               <input
                 type="text"
-                name="name"
+                name="Nombre"
                 placeholder="Nombre del producto"
-                value={formData.name}
+                value={formData.Nombre}
                 onChange={handleInputChange}
               />
               <textarea
-                name="description"
+                name="Descripcion"
                 placeholder="Descripción"
-                value={formData.description}
+                value={formData.Descripcion}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="price"
+                name="Precio"
                 placeholder="Precio"
-                value={formData.price}
+                value={formData.Precio}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="stock"
+                name="Stock"
                 placeholder="Stock"
-                value={formData.stock}
+                value={formData.Stock}
                 onChange={handleInputChange}
               />
               <select
@@ -213,29 +261,29 @@ const Dashboard: React.FC = () => {
             <form>
               <input
                 type="text"
-                name="name"
+                name="Nombre"
                 placeholder="Nombre del producto"
-                value={formData.name}
+                value={formData.Nombre}
                 onChange={handleInputChange}
               />
               <textarea
-                name="description"
+                name="Descripcion"
                 placeholder="Descripción"
-                value={formData.description}
+                value={formData.Descripcion}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="price"
+                name="Precio"
                 placeholder="Precio"
-                value={formData.price}
+                value={formData.Precio}
                 onChange={handleInputChange}
               />
               <input
                 type="number"
-                name="stock"
+                name="Stock"
                 placeholder="Stock"
-                value={formData.stock}
+                value={formData.Stock}
                 onChange={handleInputChange}
               />
               <select
