@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "../styles/Dashboard.css";
 
-const Dashboard = () => {
-  const [products, setProducts] = useState([]);
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  stock: string;
+  category: string;
+  image: File | null;
+}
+
+const Dashboard: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [editProduct, setEditProduct] = useState(null);
-  const [formData, setFormData] = useState({
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [formData, setFormData] = useState<Product>({
+    id: 0,
     name: "",
     description: "",
     price: "",
@@ -15,18 +26,34 @@ const Dashboard = () => {
     image: null,
   });
 
-  const handleInputChange = (e) => {
+  // Referencia para el input de archivo
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const allowedFormats = ["image/jpeg", "image/png"];
+      if (allowedFormats.includes(file.type)) {
+        setFormData({ ...formData, image: file });
+      } else {
+        alert("No se pueden subir archivos en formato PDF");
+        // Limpia el valor del input para evitar la selección
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    }
   };
 
   const handleAddProduct = () => {
     setProducts([...products, { ...formData, id: Date.now() }]);
     setFormData({
+      id: 0,
       name: "",
       description: "",
       price: "",
@@ -37,7 +64,7 @@ const Dashboard = () => {
     setShowAddForm(false);
   };
 
-  const handleEditProduct = (product) => {
+  const handleEditProduct = (product: Product) => {
     setEditProduct(product);
     setFormData(product);
     setShowEditForm(true);
@@ -46,11 +73,12 @@ const Dashboard = () => {
   const handleSaveEdit = () => {
     setProducts(
       products.map((p) =>
-        p.id === editProduct.id ? { ...editProduct, ...formData } : p
+        p.id === editProduct?.id ? { ...editProduct, ...formData } : p
       )
     );
     setEditProduct(null);
     setFormData({
+      id: 0,
       name: "",
       description: "",
       price: "",
@@ -61,7 +89,7 @@ const Dashboard = () => {
     setShowEditForm(false);
   };
 
-  const handleDeleteProduct = (id) => {
+  const handleDeleteProduct = (id: number) => {
     setProducts(products.filter((p) => p.id !== id));
   };
 
@@ -161,7 +189,11 @@ const Dashboard = () => {
                 <option value="Tablets">Tablets</option>
                 <option value="Accesorios">Accesorios</option>
               </select>
-              <input type="file" onChange={handleFileChange} />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
               <button
                 type="button"
                 className="btn save"
@@ -214,7 +246,11 @@ const Dashboard = () => {
                 <option value="Tablets">Tablets</option>
                 <option value="Accesorios">Accesorios</option>
               </select>
-              <input type="file" onChange={handleFileChange} />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
               <button
                 type="button"
                 className="btn save"
