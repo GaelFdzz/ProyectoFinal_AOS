@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "../styles/contactPage.css";
 
 const ContactPage = () => {
   useEffect(() => {
