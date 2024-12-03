@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import "../styles/Dashboard.css";
+// Holaasdasd
 
 interface Product {
   id: number;
@@ -11,8 +12,8 @@ interface Product {
   image: File | null;
 }
 
-const Dashboard: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+const Dashboard = () => {
+  const [products, setProducts] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -26,28 +27,13 @@ const Dashboard: React.FC = () => {
     image: null,
   });
 
-  // Referencia para el input de archivo
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const allowedFormats = ["image/jpeg", "image/png"];
-      if (allowedFormats.includes(file.type)) {
-        setFormData({ ...formData, image: file });
-      } else {
-        alert("No se pueden subir archivos en formato PDF");
-        // Limpia el valor del input para evitar la selección
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-      }
-    }
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
   };
 
   const handleAddProduct = () => {
@@ -104,6 +90,7 @@ const Dashboard: React.FC = () => {
           <thead>
             <tr>
               <th>Producto</th>
+              <th>Descripción</th>
               <th>Imagen</th>
               <th>Existencias</th>
               <th>Precio</th>
@@ -115,6 +102,7 @@ const Dashboard: React.FC = () => {
             {products.map((product) => (
               <tr key={product.id}>
                 <td>{product.name}</td>
+                <td>{product.description}</td>
                 <td>
                   {product.image ? (
                     <img
@@ -175,7 +163,7 @@ const Dashboard: React.FC = () => {
               <input
                 type="number"
                 name="stock"
-                placeholder="Stock"
+                placeholder="Existencias"
                 value={formData.stock}
                 onChange={handleInputChange}
               />
@@ -185,21 +173,17 @@ const Dashboard: React.FC = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Selecciona una categoría</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Tablets">Tablets</option>
+                <option value="Electronica">Electrónica</option>
                 <option value="Accesorios">Accesorios</option>
+                <option value="Celulares">Celulares</option>
               </select>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
+              <input type="file" onChange={handleFileChange} />
               <button
                 type="button"
-                className="btn save"
-                onClick={handleAddProduct}
+                className="btn cancel"
+                onClick={() => setShowAddForm(false)}
               >
-                Agregar producto
+                Cancelar
               </button>
             </form>
           </div>
@@ -232,7 +216,7 @@ const Dashboard: React.FC = () => {
               <input
                 type="number"
                 name="stock"
-                placeholder="Stock"
+                placeholder="Existencias"
                 value={formData.stock}
                 onChange={handleInputChange}
               />
@@ -242,9 +226,9 @@ const Dashboard: React.FC = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Selecciona una categoría</option>
-                <option value="Smartphones">Smartphones</option>
-                <option value="Tablets">Tablets</option>
+                <option value="Electronica">Electrónica</option>
                 <option value="Accesorios">Accesorios</option>
+                <option value="Celulares">Celulares</option>
               </select>
               <input
                 type="file"
@@ -257,6 +241,13 @@ const Dashboard: React.FC = () => {
                 onClick={handleSaveEdit}
               >
                 Guardar cambios
+              </button>
+              <button
+                type="button"
+                className="btn cancel"
+                onClick={() => setShowEditForm(false)}
+              >
+                Cancelar
               </button>
             </form>
           </div>

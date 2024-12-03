@@ -1,42 +1,77 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [apellido, setApellido] = useState("");
   const [error, setError] = useState("");
-  
+
   const navigate = useNavigate();
+
+  // Este useEffect verifica si ya hay un token en el localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      // Si ya hay un token, redirige al perfil o dashboard
+      navigate("/perfil"); // O puedes redirigir a "/dashboard" según tu flujo de trabajo
+    }
+  }, [navigate]); // Ejecutar el useEffect solo cuando el componente se monta
 
   const toggleView = () => {
     setIsLogin(!isLogin);
-    setError(""); 
+    setError("");
   };
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      setError("Por favor, rellena todos los campos.");
-    } else if (!email.includes('@')) {
-      setError("El correo electrónico debe contener '@'.");
-    } else {
-      setError("");
-      console.log("Iniciar sesión con:", email, password);
-      navigate("/"); 
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', {
+        email: email,
+        password: password,
+      });
+
+      // Guardar el token en localStorage
+      localStorage.setItem("access_token", response.data.access_token);
+
+      // Decodificar el token para verificar el rol
+      const decodedToken: any = jwtDecode(response.data.access_token);
+      const isAdmin = decodedToken.role === 1;
+
+      // Redirigir al dashboard si es admin, o a perfil si no lo es
+      if (isAdmin) {
+        navigate("/dashboard");
+      } else {
+        navigate("/perfil");
+      }
+
+      // Forzar la actualización del estado en el Header
+      window.dispatchEvent(new Event("storage"));
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setError("Correo o contraseña incorrectos");
     }
   };
 
-  const handleRegister = () => {
-    if (!name || !email || !password) {
-      setError("Por favor, rellena todos los campos.");
-    } else if (!email.includes('@')) {
-      setError("El correo electrónico debe contener '@'.");
-    } else {
-      setError("");
-      console.log("Registrar con:", name, email, password);
-      navigate("/");
+
+
+  const handleRegister = async () => {
+    const userData = {
+      name: name,
+      apellido: apellido,
+      email: email,
+      password: password,
+    };
+
+    try {
+      await axios.post('http://localhost:3000/auth', userData);
+      navigate('/login'); // O donde desees redirigir
+    } catch (error) {
+      console.error('Error al registrar:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -47,15 +82,15 @@ const Login = () => {
           <div className="login-section">
             <div className="form">
               <h2>Iniciar Sesión</h2>
-              <input 
-                type="text" 
-                placeholder="Correo electrónico" 
+              <input
+                type="email"
+                placeholder="Correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input 
-                type="password" 
-                placeholder="Contraseña" 
+              <input
+                type="password"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -81,21 +116,27 @@ const Login = () => {
             </div>
             <div className="form">
               <h2>Crear cuenta</h2>
-              <input 
-                type="text" 
-                placeholder="Nombre" 
+              <input
+                type="text"
+                placeholder="Nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <input 
-                type="email" 
-                placeholder="Correo electrónico" 
+              <input
+                type="text"
+                placeholder="Apellido"
+                value={apellido}
+                onChange={(e) => setApellido(e.target.value)}
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input 
-                type="password" 
-                placeholder="Contraseña" 
+              <input
+                type="password"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

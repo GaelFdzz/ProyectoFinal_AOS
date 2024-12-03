@@ -1,3 +1,4 @@
+// src/components/productList.tsx
 import { useEffect, useState } from 'react';
 import { useCarrito } from '../context/carritoContext';
 import "../styles/productsList.css";
@@ -38,14 +39,19 @@ const Catalogo = () => {
     return productosEnCarrito.some((producto) => producto.Id_Producto === productoId);
   };
 
-  const manejarAgregarAlCarrito = (producto: Producto) => {
-    if (!estaEnCarrito(producto.Id_Producto)) {
-      agregarAlCarrito(producto);
-      alert('Producto agregado al carrito');
-    } else {
-      alert('Este producto ya está en el carrito');
-    }
+  // productList.tsx
+  const manejarAgregarAlCarrito = async (producto: Producto) => {
+    const productoCarrito = {
+      Id_Producto: producto.Id_Producto,
+      Descripcion: producto.Descripcion,
+      Nombre: producto.Nombre,
+      Precio: producto.Precio,
+      Stock: producto.Stock,
+    };
+    agregarAlCarrito(productoCarrito); // Asegúrate de que esto esté funcionando correctamente
   };
+
+
 
   return (
     <div>
@@ -63,7 +69,7 @@ const Catalogo = () => {
                 />
                 <h2>{producto.Nombre}</h2>
                 <p>{producto.Descripcion}</p>
-                <p>Precio: {producto.Precio}</p>
+                <p>Precio: ${producto.Precio}</p>
                 <p>Stock: {producto.Stock}</p>
                 <button className='buttonAgregarCarrito' onClick={() => manejarAgregarAlCarrito(producto)}>
                   {estaEnCarrito(producto.Id_Producto) ? 'Agregado al carrito' : 'Agregar al carrito'}
