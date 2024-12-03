@@ -1,116 +1,94 @@
 .editar-perfil-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: white;
-    /* Fondo blanco */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: white; /* Fondo blanco */
 }
 
 .editar-perfil-box {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    width: 100%;
-    max-width: 700px;
-    /* Aumentar el ancho máximo del cuadro */
-    text-align: center;
-    border: 2px solid #f1c40f;
-    /* Borde amarillo más brillante */
-    margin-bottom: 40px;
-    /* Añadir espacio debajo del contenedor */
-    margin-top: 40px;
-    /* Añadir espacio en la parte superior para que no esté hasta arriba */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 700px; /* Aumentar el ancho máximo del cuadro */
+  text-align: center;
+  border: 2px solid #f1c40f; /* Borde amarillo más brillante */
+  margin-bottom: 40px; /* Añadir espacio debajo del contenedor */
+  margin-top: 40px; /* Añadir espacio en la parte superior para que no esté hasta arriba */
 }
 
 .editar-perfil-title {
-    font-size: 1.8rem;
-    margin-bottom: 40px;
-    /* Aumentado el margen debajo del título */
-    color: black;
-    /* Texto en negro */
-    font-weight: 600;
+  font-size: 1.8rem;
+  margin-bottom: 40px; /* Aumentado el margen debajo del título */
+  color: black; /* Texto en negro */
+  font-weight: 600;
 }
 
 .editar-perfil-form {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    /* Aumentar aún más el espacio entre los campos */
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Aumentar aún más el espacio entre los campos */
 }
 
 .editar-perfil-preview {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
-    /* Añadir más espacio debajo de la imagen previa */
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px; /* Añadir más espacio debajo de la imagen previa */
 }
 
 .editar-perfil-foto {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #f1c40f;
-    /* Borde amarillo más brillante alrededor de la foto */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f1c40f; /* Borde amarillo más brillante alrededor de la foto */
 }
 
 .editar-perfil-label {
-    font-size: 1.1rem;
-    /* Aumentar el tamaño de la etiqueta */
-    text-align: left;
-    margin-bottom: 10px;
-    /* Aumentar el margen debajo de la etiqueta */
-    display: block;
-    color: black;
-    /* Texto en negro para las etiquetas */
+  font-size: 1.1rem; /* Aumentar el tamaño de la etiqueta */
+  text-align: left;
+  margin-bottom: 10px; /* Aumentar el margen debajo de la etiqueta */
+  display: block;
+  color: black; /* Texto en negro para las etiquetas */
 }
 
 .editar-perfil-input {
-    padding: 12px;
-    /* Aumentar el padding del campo de texto */
-    border-radius: 5px;
-    border: 1px solid #f1c40f;
-    /* Bordes amarillos más brillantes en los campos */
-    width: 100%;
-    /* Asegura que el campo ocupe todo el ancho del contenedor */
-    max-width: 600px;
-    /* Ajusta el tamaño máximo de los campos */
-    margin-bottom: 15px;
-    /* Espacio debajo de cada campo */
+  padding: 12px; /* Aumentar el padding del campo de texto */
+  border-radius: 5px;
+  border: 1px solid #f1c40f; /* Bordes amarillos más brillantes en los campos */
+  width: 100%; /* Asegura que el campo ocupe todo el ancho del contenedor */
+  max-width: 600px; /* Ajusta el tamaño máximo de los campos */
+  margin-bottom: 15px; /* Espacio debajo de cada campo */
 }
 
 .editar-perfil-error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .editar-perfil-button-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    /* Aumentar el espacio entre los botones */
-    margin-top: 40px;
-    /* Espacio arriba de los botones */
+  display: flex;
+  justify-content: space-between;
+  gap: 30px; /* Aumentar el espacio entre los botones */
+  margin-top: 40px; /* Espacio arriba de los botones */
 }
 
 .editar-perfil-button {
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 45%;
-    transition: background-color 0.3s ease;
-    background-color: #f1c40f;
-    /* Botón amarillo más brillante */
-    color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 45%;
+  transition: background-color 0.3s ease;
+  background-color: #f1c40f; /* Botón amarillo más brillante */
+  color: white;
 }
 
 .editar-perfil-button:hover {
-    background-color: #f39c12;
-    /* Amarillo más oscuro en hover */
-    opacity: 0.9;
+  background-color: #f39c12; /* Amarillo más oscuro en hover */
+  opacity: 0.9;
 }
