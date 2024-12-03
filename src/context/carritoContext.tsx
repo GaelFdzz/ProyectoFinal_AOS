@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 interface Producto {
   Id_Producto: number;
@@ -7,13 +8,16 @@ interface Producto {
   Precio: number;
   Stock: number;
   Imagen?: string;
-  Cantidad?: number; // Agregar propiedad Cantidad
+  Cantidad?: number;
 }
 
 interface CarritoContextType {
   productos: Producto[];
   agregarAlCarrito: (producto: Producto) => void;
   vaciarCarrito: () => void;
+  eliminarDelCarrito: (Id_Producto: number) => void;
+  guardarCarritoEnBaseDeDatos: () => Promise<void>;
+  cargarCarritoDesdeBaseDeDatos: () => Promise<void>;
 }
 
 const CarritoContext = createContext<CarritoContextType | undefined>(undefined);
@@ -26,34 +30,130 @@ export const useCarrito = () => {
   return context;
 };
 
-export const CarritoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CarritoProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [productos, setProductos] = useState<Producto[]>([]);
+  const token = localStorage.getItem('access_token');
+  const userId = token ? jwtDecode<any>(token).sub : null;
+
+  const cargarCarritoDesdeBaseDeDatos = async () => {
+    if (!userId) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/carrito/${userId}`);
+      if (response.ok) {
+        const carrito = await response.json();
+        const productosCarrito = carrito.detalles_carrito.map((detalle: any) => ({
+          ...detalle.productos,
+          Cantidad: detalle.Cantidad,
+          Precio: detalle.Precio,
+        }));
+        setProductos(productosCarrito);
+      } else {
+        console.error('Error al cargar el carrito:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error al cargar el carrito:', error);
+    }
+  };
+
+  const guardarCarritoEnBaseDeDatos = async () => {
+    if (!userId) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
+
+    // Asegurarse de que los productos estén correctamente formateados
+    const productosAEnviar = productos.map((producto) => ({
+      Id_Producto: producto.Id_Producto,
+      Cantidad: producto.Cantidad || 1,
+      Precio: producto.Precio,
+    }));
+
+    try {
+      const response = await fetch(`http://localhost:3000/carrito/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productos: productosAEnviar }),  // Asegúrate de que "productos" sea un arreglo
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al guardar el carrito en la base de datos');
+      }
+
+      const data = await response.json();
+      console.log('Carrito guardado correctamente', data);
+    } catch (error) {
+      console.error('Error al guardar el carrito:', error);
+    }
+  };
 
   const agregarAlCarrito = (producto: Producto) => {
-    setProductos((prev) => {
-      // Verificar si el producto ya existe en el carrito
-      const productoExistente = prev.find((p) => p.Id_Producto === producto.Id_Producto);
-
+    setProductos((prevProductos) => {
+      const productoExistente = prevProductos.find((p) => p.Id_Producto === producto.Id_Producto);
       if (productoExistente) {
-        // Si existe, aumentamos la cantidad
-        return prev.map((p) =>
+        return prevProductos.map((p) =>
           p.Id_Producto === producto.Id_Producto
             ? { ...p, Cantidad: (p.Cantidad || 0) + 1 }
             : p
         );
       } else {
-        // Si no existe, lo agregamos con cantidad 1
-        return [...prev, { ...producto, Cantidad: 1 }];
+        return [...prevProductos, { ...producto, Cantidad: 1 }];
       }
     });
+    guardarCarritoEnBaseDeDatos(); // Guardar en base de datos inmediatamente
   };
 
   const vaciarCarrito = () => {
     setProductos([]);
+    guardarCarritoEnBaseDeDatos();
   };
 
+  const eliminarDelCarrito = async (Id_Producto: number) => {
+    if (!userId) {
+      console.error('No hay usuario autenticado');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/carrito/${userId}/productos/${Id_Producto}`,
+        { method: 'DELETE' }
+      );
+
+      if (response.ok) {
+        setProductos((prevProductos) =>
+          prevProductos.filter((producto) => producto.Id_Producto !== Id_Producto)
+        );
+      } else {
+        console.error('Error al eliminar producto:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error al eliminar producto:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      cargarCarritoDesdeBaseDeDatos(); // Cargar el carrito cuando el usuario se haya autenticado
+    }
+  }, [userId]);
+
   return (
-    <CarritoContext.Provider value={{ productos, agregarAlCarrito, vaciarCarrito }}>
+    <CarritoContext.Provider
+      value={{
+        productos,
+        agregarAlCarrito,
+        vaciarCarrito,
+        guardarCarritoEnBaseDeDatos,
+        cargarCarritoDesdeBaseDeDatos,
+        eliminarDelCarrito,
+      }}
+    >
       {children}
     </CarritoContext.Provider>
   );
