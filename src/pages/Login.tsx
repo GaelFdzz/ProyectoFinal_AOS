@@ -1,42 +1,51 @@
 import { useState } from "react";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [apellido, setApellido] = useState("");  // Asegúrate de tener un estado para el apellido
   const [error, setError] = useState("");
-  
+
   const navigate = useNavigate();
 
   const toggleView = () => {
     setIsLogin(!isLogin);
-    setError(""); 
+    setError("");
   };
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      setError("Por favor, rellena todos los campos.");
-    } else if (!email.includes('@')) {
-      setError("El correo electrónico debe contener '@'.");
-    } else {
-      setError("");
-      console.log("Iniciar sesión con:", email, password);
-      navigate("/"); 
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', {
+        email: email,
+        password: password,
+      });
+      console.log('Login successful', response.data);
+      localStorage.setItem("access_token", response.data.access_token); // Guardar el token
+      navigate('/dashboard'); // Redirigir al dashboard o donde sea necesario
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setError("Correo o contraseña incorrectos");
     }
   };
 
-  const handleRegister = () => {
-    if (!name || !email || !password) {
-      setError("Por favor, rellena todos los campos.");
-    } else if (!email.includes('@')) {
-      setError("El correo electrónico debe contener '@'.");
-    } else {
-      setError("");
-      console.log("Registrar con:", name, email, password);
-      navigate("/");
+  const handleRegister = async () => {
+    const userData = {
+      name: name,           // El nombre del usuario
+      apellido: apellido,   // El apellido del usuario
+      email: email,         // El correo electrónico
+      password: password,   // La contraseña
+    };
+
+    try {
+      const response = await axios.post('http://localhost:3000/auth', userData);
+      console.log('Registro exitoso:', response.data);
+    } catch (error) {
+      console.error('Error al registrar:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -47,15 +56,15 @@ const Login = () => {
           <div className="login-section">
             <div className="form">
               <h2>Iniciar Sesión</h2>
-              <input 
-                type="text" 
-                placeholder="Correo electrónico" 
+              <input
+                type="text"
+                placeholder="Correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input 
-                type="password" 
-                placeholder="Contraseña" 
+              <input
+                type="password"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -81,27 +90,34 @@ const Login = () => {
             </div>
             <div className="form">
               <h2>Crear cuenta</h2>
-              <input 
-                type="text" 
-                placeholder="Nombre" 
+              <input
+                type="text"
+                placeholder="Nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <input 
-                type="email" 
-                placeholder="Correo electrónico" 
+              <input
+                type="text"
+                placeholder="Apellido"  // Agregar el campo de apellido
+                value={apellido}
+                onChange={(e) => setApellido(e.target.value)}  // Debes crear un estado para 'apellido'
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input 
-                type="password" 
-                placeholder="Contraseña" 
+              <input
+                type="password"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button className="btn-register" onClick={handleRegister}>REGISTRARME</button>
               {error && <p className="error">{error}</p>}
             </div>
+
           </div>
         )}
       </div>
