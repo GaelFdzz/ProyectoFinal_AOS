@@ -2,63 +2,53 @@ import { useCarrito } from '../context/carritoContext';
 import '../styles/carritoPage.css';
 
 const Carrito = () => {
-  const { productos, vaciarCarrito } = useCarrito();
+  const { productos, vaciarCarrito, eliminarDelCarrito, guardarCarritoEnBaseDeDatos } = useCarrito();
 
-  console.log('Productos en el carrito:', productos); // Depuración de datos
-
-  // Calcular el total de los productos en el carrito
-  const calcularTotal = () => {
-    return productos.reduce((total, producto) => {
-      const precio = Number(producto.Precio); // Convertimos a número
-      const subtotal = isNaN(precio) ? 0 : precio * (producto.Cantidad || 1); // Si no es número, ponemos 0
-      return total + subtotal;
-    }, 0);
-  };
-
-  const total = calcularTotal();
-
-  const manejarPago = () => {
-    if (productos.length === 0) {
-      alert('No hay productos en el carrito');
-      return;
-    }
-    alert(`Total a pagar: $${total.toFixed(2)}`);
-  };
+  // Función para calcular el total del carrito
+  const calcularTotal = () =>
+    productos.reduce((total, producto) => total + producto.Precio * (producto.Cantidad || 1), 0);
 
   return (
     <div className="container">
       <div className="carrito-container">
         <h1 className="carrito-header">Tu carrito</h1>
+
         {productos.length > 0 ? (
           <>
-            {productos.map((producto, index) => {
-              const precio = Number(producto.Precio); // Asegúrate de que el precio sea un número
-              const subtotal = isNaN(precio) ? 0 : precio * (producto.Cantidad || 1); // Manejamos el caso de NaN
-
-              return (
-                <div className="carrito-producto" key={index}>
+            <div className="carrito-productos">
+              {productos.map((producto) => (
+                <div className="carrito-producto" key={producto.Id_Producto}>
                   <img
-                    src={`http://localhost:3000${producto.Imagen || '/iphone.png'}`}
+                    src={`http://localhost:3000${producto.Imagen || '/placeholder.png'}`}
                     alt={producto.Nombre}
+                    className="producto-imagen"
                   />
-                  <div>
-                    <h2>{producto.Nombre}</h2>
-                    <p>{producto.Descripcion}</p>
-                    <p>Precio: ${precio.toFixed(2)}</p> {/* Aseguramos que el precio sea un número antes de usar toFixed */}
-                    <p>Cantidad: {producto.Cantidad}</p>
-                    <p>Subtotal: ${subtotal.toFixed(2)}</p>
+                  <div className="producto-info">
+                    <h3 className="producto-nombre">{producto.Nombre}</h3>
+                    <p className="producto-descripcion">{producto.Descripcion}</p>
+                    <p className="producto-precio">Precio: ${producto.Precio}</p>
+                    <p className="producto-cantidad">Cantidad: {producto.Cantidad}</p>
+                    <button
+                      onClick={() => eliminarDelCarrito(producto.Id_Producto)}
+                      className="eliminar-btn"
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-            <div className="carrito-total">
-              <h2>Total: ${total.toFixed(2)}</h2>
+              ))}
             </div>
-            <button className="vaciar-carrito-btn" onClick={vaciarCarrito}>Vaciar carrito</button>
-            <button className="pagar-btn" onClick={manejarPago}>Pagar</button>
+
+            <div className="carrito-footer">
+              <p className="carrito-total">Total: ${calcularTotal().toFixed(2)}</p>
+              <div className="botones-carrito">
+                <button onClick={vaciarCarrito} className="vaciar-btn">Vaciar Carrito</button>
+                <button onClick={guardarCarritoEnBaseDeDatos} className="guardar-btn">Guardar Carrito</button>
+              </div>
+            </div>
           </>
         ) : (
-          <p className='carritoVacio'>Tu carrito está vacío</p>
+          <p className="carrito-vacio">Tu carrito está vacío</p>
         )}
       </div>
     </div>
