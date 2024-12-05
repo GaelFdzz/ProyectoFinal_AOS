@@ -11,8 +11,8 @@ interface Product {
   image: File | null;
 }
 
-const Dashboard = () => {
-  const [products, setProducts] = useState([]);
+const Dashboard: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -26,13 +26,26 @@ const Dashboard = () => {
     image: null,
   });
 
-  const handleInputChange = (e) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const allowedFormats = ["image/jpeg", "image/png"];
+      if (allowedFormats.includes(file.type)) {
+        setFormData({ ...formData, image: file });
+      } else {
+        alert("Por favor, sube un archivo en formato .jpg o .png.");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    }
   };
 
   const handleAddProduct = () => {
@@ -176,7 +189,14 @@ const Dashboard = () => {
                 <option value="Accesorios">Accesorios</option>
                 <option value="Celulares">Celulares</option>
               </select>
-              <input type="file" onChange={handleFileChange} />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
+              <button type="button" className="btn save" onClick={handleAddProduct}>
+                Guardar
+              </button>
               <button
                 type="button"
                 className="btn cancel"
