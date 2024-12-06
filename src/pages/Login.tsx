@@ -18,10 +18,17 @@ const Login = () => {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
-      // Si ya hay un token, redirige al perfil o dashboard
-      navigate("/perfil"); // O puedes redirigir a "/dashboard" según tu flujo de trabajo
+      try {
+        const decodedToken: any = jwtDecode(token);
+        const isAdmin = decodedToken.role === 1;
+        navigate(isAdmin ? "/dashboard" : "/perfil");
+      } catch (error) {
+        console.error("Error decodificando el token:", error);
+        localStorage.removeItem("access_token");
+      }
     }
-  }, [navigate]); // Ejecutar el useEffect solo cuando el componente se monta
+  }, [navigate]);
+
 
   const toggleView = () => {
     setIsLogin(!isLogin);

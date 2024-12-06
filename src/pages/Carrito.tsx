@@ -2,34 +2,53 @@ import { useCarrito } from '../context/carritoContext';
 import '../styles/carritoPage.css';
 
 const Carrito = () => {
-  const { productos, vaciarCarrito, eliminarDelCarrito, guardarCarritoEnBaseDeDatos } = useCarrito();
+  const { productosEnCarrito, vaciarCarrito, eliminarDelCarrito } = useCarrito();
 
-  // Función para calcular el total del carrito
   const calcularTotal = () =>
-    productos.reduce((total, producto) => total + producto.Precio * (producto.Cantidad || 1), 0);
+    productosEnCarrito.reduce(
+      (total, producto) => total + (typeof producto.Precio === 'number' ? producto.Precio : 0) * Math.max(producto.Cantidad || 1, 1),
+      0
+    );
+
+  const obtenerImagenProducto = (imagen: string) => {
+    return imagen && imagen !== 'null' && imagen !== 'undefined' && imagen !== ''
+      ? `http://localhost:3000${imagen}`
+      : 'http://localhost:3000/imagenes/iphone.png';
+  };
+
+  const manejarAccion = async (accion: Function, ...args: any[]) => {
+    try {
+      await accion(...args);
+    } catch (error) {
+      console.error("Ocurrió un error al realizar la acción:", error);
+    }
+  };
 
   return (
     <div className="container">
       <div className="carrito-container">
         <h1 className="carrito-header">Tu carrito</h1>
 
-        {productos.length > 0 ? (
+        {productosEnCarrito.length > 0 ? (
           <>
             <div className="carrito-productos">
-              {productos.map((producto) => (
+              {productosEnCarrito.map((producto) => (
                 <div className="carrito-producto" key={producto.Id_Producto}>
                   <img
-                    src={`http://localhost:3000${producto.Imagen || '/placeholder.png'}`}
+                    src={obtenerImagenProducto(producto.Imagen)}
                     alt={producto.Nombre}
                     className="producto-imagen"
                   />
                   <div className="producto-info">
                     <h3 className="producto-nombre">{producto.Nombre}</h3>
                     <p className="producto-descripcion">{producto.Descripcion}</p>
-                    <p className="producto-precio">Precio: ${producto.Precio}</p>
-                    <p className="producto-cantidad">Cantidad: {producto.Cantidad}</p>
+                    <p className="producto-precio">
+                      Precio: ${typeof producto.Precio === 'number' ? producto.Precio.toFixed(2) : '0.00'}
+                    </p>
+
+                    <p className="producto-cantidad">Cantidad: {Math.max(producto.Cantidad || 1, 1)}</p>
                     <button
-                      onClick={() => eliminarDelCarrito(producto.Id_Producto)}
+                      onClick={() => manejarAccion(eliminarDelCarrito, producto.Id_Producto)}
                       className="eliminar-btn"
                     >
                       Eliminar
@@ -42,8 +61,9 @@ const Carrito = () => {
             <div className="carrito-footer">
               <p className="carrito-total">Total: ${calcularTotal().toFixed(2)}</p>
               <div className="botones-carrito">
-                <button onClick={vaciarCarrito} className="vaciar-btn">Vaciar Carrito</button>
-                <button onClick={guardarCarritoEnBaseDeDatos} className="guardar-btn">Guardar Carrito</button>
+                <button onClick={() => manejarAccion(vaciarCarrito)} className="vaciar-btn">
+                  Vaciar Carrito
+                </button>
               </div>
             </div>
           </>

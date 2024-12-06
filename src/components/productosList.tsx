@@ -15,16 +15,23 @@ interface Producto {
 const Catalogo = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [cargando, setCargando] = useState(true);
-  const { agregarAlCarrito, productos: productosEnCarrito } = useCarrito();
+  const { agregarAlCarrito, productosEnCarrito } = useCarrito();
 
   useEffect(() => {
     const obtenerProductos = async () => {
       setCargando(true);
       try {
         const response = await fetch('http://localhost:3000/productos');
+        if (!response.ok) {
+          throw new Error('Error al obtener los productos');
+        }
         const data = await response.json();
 
-        // Asegurar que los datos recibidos sean válidos
+        // Validar que 'data' sea un array de productos
+        if (!Array.isArray(data)) {
+          throw new Error('La respuesta de la API no contiene productos válidos');
+        }
+
         const productosValidados = data.map((producto: Producto) => ({
           ...producto,
           Nombre: producto.Nombre || 'Nombre no disponible',
@@ -42,6 +49,7 @@ const Catalogo = () => {
       }
     };
 
+
     obtenerProductos();
   }, []);
 
@@ -50,8 +58,8 @@ const Catalogo = () => {
   };
 
   const manejarAgregarAlCarrito = (producto: Producto) => {
-    if (!producto.Id_Producto || !producto.Precio) {
-      console.error('Producto inválido:', producto);
+    if (!producto.Id_Producto || isNaN(producto.Precio) || producto.Precio <= 0 || producto.Stock <= 0) {
+      console.error('Producto inválido o sin stock:', producto);
       return;
     }
 
@@ -59,12 +67,17 @@ const Catalogo = () => {
       Id_Producto: producto.Id_Producto,
       Descripcion: producto.Descripcion,
       Nombre: producto.Nombre,
-      Precio: producto.Precio,
+      Precio: producto.Precio, // Verifica que sea un número
       Stock: producto.Stock,
+      Imagen: producto.Imagen,
+      Cantidad: 1, // Se agrega la cantidad inicial
     };
 
     agregarAlCarrito(productoCarrito);
   };
+
+
+
 
   return (
     <div>
@@ -76,7 +89,7 @@ const Catalogo = () => {
             productos.map((producto) => (
               <div className="productSale" key={producto.Id_Producto}>
                 <img
-                  src={`http://localhost:3000${producto.Imagen || '/imagenes/iphone.png'}`}
+                  src={producto.Imagen ? `http://localhost:3000${producto.Imagen}` : '/imagenes/iphone.png'}
                   alt={producto.Nombre}
                   className="productImage"
                 />
