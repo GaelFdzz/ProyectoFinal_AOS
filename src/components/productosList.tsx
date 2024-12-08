@@ -9,7 +9,7 @@ interface Producto {
   Descripcion: string;
   Precio: number;
   Stock: number;
-  Imagen: string; // Hacerlo obligatorio, ya que el backend asigna un valor predeterminado
+  Imagen: string;
 }
 
 const Catalogo = () => {

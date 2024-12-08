@@ -4,5 +4,6 @@ export interface Producto {
     Descripcion: string;
     Precio: number;
     Stock: number;
-    Imagen?: string;
-}  
+    Imagen?: string | File | null;
+    Categoria?: string; // Agregado
+}
