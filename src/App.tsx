@@ -15,6 +15,7 @@ import TawkToChat from "./components/TawkToChat";
 import PrivateRoute from "./components/PrivateRoute";
 import { CarritoProvider } from "./context/carritoContext";
 import { jwtDecode } from "jwt-decode";
+import Pago from "./pages/Pago"; // Importa la nueva página de pagos
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/productos/:id" element={<DetallesProducto />} />
+          <Route path="/pago" element={<Pago />} /> {/* Nueva ruta para la página de pagos */}
 
           <Route
             path="/dashboard"
