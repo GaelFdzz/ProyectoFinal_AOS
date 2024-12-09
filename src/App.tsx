@@ -49,7 +49,7 @@ function App() {
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/productos/:id" element={<DetallesProducto />} />
-          <Route path="/pago" element={<Pago />} /> {/* Nueva ruta para la página de pagos */}
+          <Route path="/pago" element={<Pago />} />
 
           <Route
             path="/dashboard"

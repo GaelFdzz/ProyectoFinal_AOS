@@ -17,7 +17,7 @@ const ContactPage: React.FC = () => {
 
     useEffect(() => {
         const link = document.createElement("link");
-        link.href = "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap";
+        link.href = "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap";
         link.rel = "stylesheet";
         document.head.appendChild(link);
 
@@ -28,16 +28,15 @@ const ContactPage: React.FC = () => {
 
     return (
         <div className="contacto">
-
+            <h1 className="title">¿Necesitas ayuda?</h1>
             <div className="container">
-                <section className="section">
-                    <h1 className="title">¿Necesitas ayuda?</h1>
+                <section className="contact-card">
                     <p className="text">
-                        Estamos aquí para ayudarte. Usa nuestro chat en vivo para obtener soporte en tiempo real. Haz clic en el ícono
-                        de chat en la esquina inferior derecha para comenzar.
+                        Estamos aquí para ayudarte. Usa nuestro chat en vivo para obtener soporte en tiempo real.
+                        Haz clic en el ícono de chat en la esquina inferior derecha para comenzar.
                     </p>
                     <p className="text">Si prefieres contactarnos por otros medios:</p>
-                    <ul className="list">
+                    <ul className="contact-list">
                         <li>
                             <strong>Email:</strong> sellphonecun@gmail.com
                         </li>
@@ -48,20 +47,35 @@ const ContactPage: React.FC = () => {
                             <strong>Ubicación:</strong> Cancún, Q. Roo, Benito Juárez
                         </li>
                     </ul>
-                    <div style={{ marginTop: "30px" }}>
-                        <h3 style={{ fontSize: "1.5rem", color: "#000" }}>¡Síguenos en redes sociales!</h3>
-                        <div className="social">
-                            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="link">
-                                📘 Facebook
-                            </a>
-                            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="link">
-                                🐦 Twitter
-                            </a>
-                            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="link">
-                                📸 Instagram
-                            </a>
-                        </div>
+                </section>
+
+                <section className="social-card">
+                    <h3 className="social-title">¡Síguenos en redes sociales!</h3>
+                    <div className="social-links">
+                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon facebook">
+                            📘 Facebook
+                        </a>
+                        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="social-icon twitter">
+                            🐦 Twitter
+                        </a>
+                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon instagram">
+                            📸 Instagram
+                        </a>
                     </div>
+                </section>
+
+                <section className="map-section">
+                    <h3 className="map-title">Encuéntranos aquí</h3>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3733.8757456658047!2d-86.84816972529518!3d21.162655979433915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2babcde12345%3A0xf12c3e5a67890f12!2sPlaza%20Las%20Am%C3%A9ricas%2C%20Canc%C3%BAn!5e0!3m2!1ses-419!2smx!4v1693590809999!5m2!1ses-419!2smx"
+                        width="100%"
+                        height="400"
+                        style={{ border: 0 }}
+                        allowFullScreen={true}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Ubicación en Cancún"
+                    ></iframe>
                 </section>
             </div>
         </div>

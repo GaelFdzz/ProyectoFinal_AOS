@@ -65,6 +65,10 @@ const Carrito = () => {
                 <button onClick={() => manejarAccion(vaciarCarrito)} className="vaciar-btn">
                   Vaciar Carrito
                 </button>
+
+                <button>
+                  Pagar
+                </button>
               </div>
             </div>
           </>

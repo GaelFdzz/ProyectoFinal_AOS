@@ -1,11 +1,4 @@
-/* styles/pago.css */
-
-.payment-page {
-    background-color: #f8f9fa;
-    padding: 40px 0;
-}
-
-.container {
+.payment-page .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -14,21 +7,27 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.title {
+.payment-page {
+    background-color: #f8f9fa;
+    padding: 40px 0;
+}
+
+
+.payment-page .title {
     font-size: 2.5rem;
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
 }
 
-.text {
+.payment-page .text {
     font-size: 1.2rem;
     text-align: center;
     margin-bottom: 30px;
     color: #6c757d;
 }
 
-.subtitle {
+.payment-page .subtitle {
     font-size: 1.5rem;
     margin-top: 30px;
     margin-bottom: 15px;
@@ -36,28 +35,28 @@
     color: #007bff;
 }
 
-.card-container {
+.payment-page .card-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 30px;
 }
 
-.credit-card-form {
+.payment-page .credit-card-form {
     width: 100%;
 }
 
-.form-group {
+.payment-page .form-group {
     margin-bottom: 15px;
 }
 
-.form-group label {
+.payment-page .form-group label {
     font-weight: bold;
     display: block;
     margin-bottom: 5px;
 }
 
-.form-group input {
+.payment-page .form-group input {
     width: calc(100% - 14px);
     padding: 10px;
     border: 1px solid #ced4da;
@@ -66,18 +65,18 @@
     transition: border-color 0.3s;
 }
 
-.form-group input:focus {
+.payment-page .form-group input:focus {
     border-color: #007bff;
     outline: none;
 }
 
-.error {
+.payment-page .error {
     color: #dc3545;
     font-size: 0.875rem;
     margin-top: 5px;
 }
 
-.pay-button {
+.payment-page .pay-button {
     width: 100%;
     padding: 15px;
     background-color: #28a745;
@@ -90,17 +89,17 @@
     transition: background-color 0.3s;
 }
 
-.pay-button:hover {
+.payment-page .pay-button:hover {
     background-color: #218838;
 }
 
-.payment-options {
+.payment-page .payment-options {
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
 }
 
-.pay-option {
+.payment-page .pay-option {
     display: flex;
     align-items: center;
     background-color: #e9ecef;
@@ -111,17 +110,17 @@
     text-align: center;
 }
 
-.pay-option img {
+.payment-page .pay-option img {
     width: 48px;
     height: 48px;
     margin-right: 10px;
 }
 
-.pay-option span {
+.payment-page .pay-option span {
     font-size: 1rem;
     font-weight: bold;
 }
 
-.pay-option:hover {
+.payment-page .pay-option:hover {
     background-color: #dee2e6;
 }

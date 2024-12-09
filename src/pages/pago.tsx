@@ -64,8 +64,9 @@ const PaymentPage: React.FC = () => {
 
     return (
         <div className="payment-page">
+            <h1 className="title">Elige tu método de pago preferido:</h1>
+
             <div className="container">
-                <h1 className="title">Elige tu método de pago preferido:</h1>
                 <p className="text"></p>
 
                 {/* Botón de PayPal */}

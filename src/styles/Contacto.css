@@ -1,60 +1,121 @@
-/* ContactPage.css */
-
-.contacto .container {
-    font-family: 'Roboto', sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
+/* General */
+/* Sección del mapa */
+.map-section {
+    margin-top: 30px;
     padding: 20px;
-}
-
-.contacto .title {
-    margin: 0;
-    font-size: 3.2rem;
-    color: #FFC300;
-}
-
-.contacto .section {
+    background: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     text-align: center;
+}
+
+.map-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+iframe {
+    border-radius: 10px;
+}
+
+.contacto body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    color: #333;
+}
+
+/* Contenedor principal */
+.contacto .container {
+    max-width: 800px;
     padding: 20px;
-    background-color: #f1f5f9;
+    background: #fff;
     border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.contacto .subtitle {
-    font-size: 2rem;
-    color: #000;
+/* Tarjetas */
+.contact-card,
+.social-card {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.contacto .text {
-    line-height: 1.8;
-    color: #000;
-    font-size: 1.2rem;
+/* Títulos */
+.contacto .title {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-.contacto .list {
+.social-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+/* Texto */
+.text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+/* Lista de contactos */
+.contact-list {
     list-style: none;
     padding: 0;
-    font-size: 1.2rem;
-    color: #000;
+    margin: 0;
 }
 
-.contacto .link {
-    text-decoration: none;
-    padding: 15px 20px;
-    font-size: 1.6rem;
-    border-radius: 10px;
-    color: #000;
-    background-color: #FFDE21;
-    transition: background-color 0.3s;
+.contact-list li {
+    font-size: 1rem;
+    margin-bottom: 10px;
 }
 
-.contacto .link:hover {
-    background-color: #E6C71E;
+.contact-list strong {
+    color: #2c3e50;
 }
 
-.contacto .social {
+/* Redes sociales */
+.social-links {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin-top: 20px;
+}
+
+.social-icon {
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+.social-icon.facebook {
+    background: #3b5998;
+}
+
+.social-icon.twitter {
+    background: #1da1f2;
+}
+
+.social-icon.instagram {
+    background: #e4405f;
+}
+
+.social-icon:hover {
+    opacity: 0.9;
 }
