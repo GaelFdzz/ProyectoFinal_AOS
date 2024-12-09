@@ -17,12 +17,19 @@ const DetallesProducto = () => {
   const [haComprado, setHaComprado] = useState(false)
   const [mensajeErrorResena, setMensajeErrorResena] = useState("");
   const [usuarioNombre, setUsuarioNombre] = useState("");
+  const [mostrarDescripcionCompleta, setMostrarDescripcionCompleta] = useState(false);
 
   const { productosEnCarrito, agregarAlCarrito } = useCarrito();
 
   const estaEnElCarrito = productosEnCarrito.some(
     (item) => item.Id_Producto === producto?.Id_Producto
   );
+
+  const descripcionLimitada = producto?.Descripcion.slice(0, 150); // Limita el texto a 150 caracteres
+
+  const toggleDescripcionCompleta = () => {
+    setMostrarDescripcionCompleta(!mostrarDescripcionCompleta);
+  };
 
   useEffect(() => {
     const obtenerProducto = async () => {
@@ -147,7 +154,6 @@ const DetallesProducto = () => {
     }
   };
 
-
   if (cargando) {
     return <div className="spinner">Cargando...</div>;
   }
@@ -169,7 +175,16 @@ const DetallesProducto = () => {
           </div>
           <div className="detallesInfo">
             <h2>{producto.Nombre}</h2>
-            <p>{producto.Descripcion}</p>
+            <p className="button-mostrar-detalles">
+              {mostrarDescripcionCompleta
+                ? producto.Descripcion
+                : descripcionLimitada + (producto.Descripcion.length > 150 ? "..." : "")}
+              {producto.Descripcion.length > 150 && (
+                <button onClick={toggleDescripcionCompleta}>
+                  {mostrarDescripcionCompleta ? "Mostrar menos" : "Leer más"}
+                </button>
+              )}
+            </p>
             <p>Precio: {producto.Precio} MXN</p>
             <p>Stock: {producto.Stock}</p>
             {estaEnElCarrito ? (

@@ -16,6 +16,7 @@ const Catalogo = () => {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [cargando, setCargando] = useState(true);
   const { agregarAlCarrito, productosEnCarrito } = useCarrito();
+  const [mostrarDescripcionCompleta, setMostrarDescripcionCompleta] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
     const obtenerProductos = async () => {
@@ -27,7 +28,6 @@ const Catalogo = () => {
         }
         const data = await response.json();
 
-        // Validar que 'data' sea un array de productos
         if (!Array.isArray(data)) {
           throw new Error('La respuesta de la API no contiene productos válidos');
         }
@@ -38,7 +38,7 @@ const Catalogo = () => {
           Descripcion: producto.Descripcion || 'Sin descripción',
           Precio: producto.Precio || 0,
           Stock: producto.Stock || 0,
-          Imagen: producto.Imagen || '/imagenes/iphone.png', // Imagen predeterminada si es nula
+          Imagen: producto.Imagen || '/imagenes/iphone.png',
         }));
 
         setProductos(productosValidados);
@@ -48,7 +48,6 @@ const Catalogo = () => {
         setCargando(false);
       }
     };
-
 
     obtenerProductos();
   }, []);
@@ -67,17 +66,21 @@ const Catalogo = () => {
       Id_Producto: producto.Id_Producto,
       Descripcion: producto.Descripcion,
       Nombre: producto.Nombre,
-      Precio: producto.Precio, // Verifica que sea un número
+      Precio: producto.Precio,
       Stock: producto.Stock,
       Imagen: producto.Imagen,
-      Cantidad: 1, // Se agrega la cantidad inicial
+      Cantidad: 1,
     };
 
     agregarAlCarrito(productoCarrito);
   };
 
-
-
+  const toggleDescripcionCompleta = (id: number) => {
+    setMostrarDescripcionCompleta((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   return (
     <div>
@@ -94,7 +97,19 @@ const Catalogo = () => {
                   className="productImage"
                 />
                 <h2>{producto.Nombre}</h2>
-                <p>{producto.Descripcion}</p>
+                <p className='button-mostrar-detalles'>
+                  {mostrarDescripcionCompleta[producto.Id_Producto]
+                    ? producto.Descripcion
+                    : producto.Descripcion.substring(0, 50) + (producto.Descripcion.length > 50 ? '...' : '')}
+                  {producto.Descripcion.length > 50 && (
+                    <button
+                      className="buttonToggleDescripcion"
+                      onClick={() => toggleDescripcionCompleta(producto.Id_Producto)}
+                    >
+                      {mostrarDescripcionCompleta[producto.Id_Producto] ? 'Mostrar menos' : 'Leer más'}
+                    </button>
+                  )}
+                </p>
                 <p>Precio: ${producto.Precio}</p>
                 <p>Stock: {producto.Stock > 0 ? producto.Stock : 'Agotado'}</p>
                 <button

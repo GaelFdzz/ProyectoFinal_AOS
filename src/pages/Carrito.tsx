@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { useCarrito } from '../context/carritoContext';
 import '../styles/carritoPage.css';
+import { useState } from 'react';
 
 const Carrito = () => {
   const { productosEnCarrito, vaciarCarrito, eliminarDelCarrito } = useCarrito();
   const navigate = useNavigate(); // Inicializa useNavigate
+  const [descripcionesExpandidas, setDescripcionesExpandidas] = useState<{ [key: number]: boolean }>({});
 
   const calcularTotal = () =>
     productosEnCarrito.reduce(
@@ -35,44 +37,68 @@ const Carrito = () => {
     }
   };
 
+  const toggleDescripcion = (productoId: number) => {
+    setDescripcionesExpandidas((prev) => ({
+      ...prev,
+      [productoId]: !prev[productoId],
+    }));
+  };
+
   return (
     <div className="container">
       <h1 className="carrito-header">Tu carrito</h1>
       <div className="carrito-container">
-
         {productosEnCarrito.length > 0 ? (
           <>
             <div className="carrito-productos">
-              {productosEnCarrito.map((producto) => (
-                <div className="carrito-producto" key={producto.Id_Producto}>
-                  <img
-                    src={obtenerImagenProducto(producto.Imagen)}
-                    alt={producto.Nombre}
-                    className="producto-imagen"
-                  />
-                  <div className="producto-info">
-                    <h3 className="producto-nombre">{producto.Nombre}</h3>
-                    <p className="producto-descripcion">{producto.Descripcion}</p>
-                    <p className="producto-precio">
-                      Precio: ${typeof producto.Precio === 'number' ? producto.Precio.toFixed(2) : '0.00'}
-                    </p>
+              {productosEnCarrito.map((producto) => {
+                const descripcionLimitada = producto.Descripcion.slice(0, 150); // Limitar a 150 caracteres
+                const mostrarDescripcionCompleta = descripcionesExpandidas[producto.Id_Producto];
 
-                    <p className="producto-cantidad">Cantidad: {Math.max(producto.Cantidad || 1, 1)}</p>
-                    <button
-                      onClick={() => manejarAccion(eliminarDelCarrito, producto.Id_Producto)}
-                      className="eliminar-btn"
-                    >
-                      Eliminar
-                    </button>
+                return (
+                  <div className="carrito-producto" key={producto.Id_Producto}>
+                    <img
+                      src={obtenerImagenProducto(producto.Imagen)}
+                      alt={producto.Nombre}
+                      className="producto-imagen"
+                    />
+                    <div className="producto-info">
+                      <h3 className="producto-nombre">{producto.Nombre}</h3>
+                      <p className="producto-descripcion">
+                        {mostrarDescripcionCompleta
+                          ? producto.Descripcion
+                          : descripcionLimitada + (producto.Descripcion.length > 150 ? '...' : '')}
+                        {producto.Descripcion.length > 150 && (
+                          <button
+                            onClick={() => toggleDescripcion(producto.Id_Producto)}
+                            className="toggle-descripcion-btn"
+                          >
+                            {mostrarDescripcionCompleta ? 'Mostrar menos' : 'Leer más'}
+                          </button>
+                        )}
+                      </p>
+                      <p className="producto-precio">
+                        Precio: ${typeof producto.Precio === 'number' ? producto.Precio.toFixed(2) : '0.00'}
+                      </p>
+                      <p className="producto-cantidad">
+                        Cantidad: {Math.max(producto.Cantidad || 1, 1)}
+                      </p>
+                      <button
+                        onClick={() => manejarAccion(eliminarDelCarrito, producto.Id_Producto)}
+                        className="eliminar-btn"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="carrito-footer">
               <p className="carrito-total">Total: ${calcularTotal().toFixed(2)}</p>
               <div className="botones-carrito">
-                <button className='pagar-btn' onClick={manejarPago}>Pagar</button>
+                <button className="pagar-btn" onClick={manejarPago}>Pagar</button>
                 <button onClick={() => manejarAccion(vaciarCarrito)} className="vaciar-btn">Vaciar Carrito</button>
               </div>
             </div>

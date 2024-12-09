@@ -79,3 +79,9 @@
 .carrito-vacio{
   text-align: center;
 }
+
+.producto-descripcion button{
+  background-color: transparent;
+  color: black;
+  padding: 1rem;
+}

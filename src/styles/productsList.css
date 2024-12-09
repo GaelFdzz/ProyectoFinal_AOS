@@ -22,7 +22,6 @@ body{
 
 .productSale img{
     place-self: center;
-    width: 200px;
     height: 200px;
     object-fit: cover;
 }
@@ -41,4 +40,10 @@ body{
 
 .buttonVerDetalles{
     background-color: #383146;
+}
+
+.buttonToggleDescripcion{
+    background-color: transparent;
+    color: black;
+    padding: 1rem;
 }

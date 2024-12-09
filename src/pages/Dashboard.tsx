@@ -17,6 +17,9 @@ const Dashboard: React.FC = () => {
     Imagen: null,
   });
 
+  // Mantenemos el estado de la expansión de cada producto en un objeto
+  const [expandedDescriptions, setExpandedDescriptions] = useState<{ [key: number]: boolean }>({});
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const resetForm = () => {
@@ -61,18 +64,20 @@ const Dashboard: React.FC = () => {
         setFormData({ ...formData, Imagen: file });
       } else {
         alert("Por favor, sube un archivo en formato .jpg o .png.");
-        if (fileInputRef.current) fileInputRef.current.value = "";
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Limpia el input de archivo
       }
     }
   };
 
+
   const handleAddProduct = async () => {
     if (!validateForm()) {
-      return; // Detén la ejecución si el formulario no es válido
+      return;
     }
 
+    console.log(formData);  // Verifica los valores antes de enviar
+
     try {
-      // Elimina `Id_Producto` si no es necesario en la petición
       const formDataToSend = new FormData();
       formDataToSend.append("Nombre", formData.Nombre);
       formDataToSend.append("Descripcion", formData.Descripcion);
@@ -81,7 +86,6 @@ const Dashboard: React.FC = () => {
       if (formData.Imagen instanceof File) {
         formDataToSend.append("Imagen", formData.Imagen);
       }
-
 
       const response = await api.post("/productos", formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -142,16 +146,11 @@ const Dashboard: React.FC = () => {
     }
   };
 
-
-
-
   const handleDeleteProduct = async (id: number) => {
     try {
-      // Intenta eliminar el producto
       await api.delete(`/productos/${id}`);
       setProducts(products.filter((p) => p.Id_Producto !== id));
     } catch (error: any) {
-      // Si hay un error con dependencias activas, pide confirmación
       if (error.response && error.response.status === 400) {
         const confirmar = window.confirm(
           `${error.response.data.message}\n¿Deseas eliminar todas las dependencias y el producto?`,
@@ -168,6 +167,13 @@ const Dashboard: React.FC = () => {
         console.error("Error al eliminar producto:", error);
       }
     }
+  };
+
+  const toggleDescription = (productId: number) => {
+    setExpandedDescriptions((prevState) => ({
+      ...prevState,
+      [productId]: !prevState[productId], // Cambia el estado de expansión para este producto
+    }));
   };
 
   const validateForm = (): boolean => {
@@ -194,9 +200,6 @@ const Dashboard: React.FC = () => {
     return true;
   };
 
-
-
-
   return (
     <div className="container">
       <h1>Gestión de productos</h1>
@@ -219,7 +222,18 @@ const Dashboard: React.FC = () => {
             {products.map((product) => (
               <tr key={product.Id_Producto}>
                 <td>{product.Nombre}</td>
-                <td>{product.Descripcion}</td>
+                <td>
+                  <div className="description-container">
+                    <p>
+                      {expandedDescriptions[product.Id_Producto]
+                        ? product.Descripcion
+                        : `${product.Descripcion.slice(0, 100)}...`}
+                    </p>
+                    <button className="btn toggle" onClick={() => toggleDescription(product.Id_Producto)}>
+                      {expandedDescriptions[product.Id_Producto] ? "Ver menos" : "Ver más"}
+                    </button>
+                  </div>
+                </td>
                 <td>
                   {typeof product.Imagen === "string" ? (
                     <img
@@ -251,39 +265,12 @@ const Dashboard: React.FC = () => {
             ))}
           </tbody>
         </table>
+
         {showAddForm && (
           <div className="form-container">
-            <h2>Registrar nuevo producto</h2>
+            <h2>Agregar nuevo producto</h2>
             <form>
               <label htmlFor="Nombre">Nombre</label>
-              <input type="text" name="Nombre" placeholder="Nombre del producto" value={formData.Nombre} onChange={handleInputChange} />
-
-              <label htmlFor="Descripcion">Descripcion</label>
-              <textarea name="Descripcion" placeholder="Descripción" value={formData.Descripcion} onChange={handleInputChange} />
-
-              <label htmlFor="Precio">Precio</label>
-              <input type="number" name="Precio" min="0" value={formData.Precio} onChange={handleInputChange} />
-
-              <label htmlFor="Stock">Stock</label>
-              <input type="number" name="Stock" placeholder="Existencias" value={formData.Stock} onChange={handleInputChange} />
-
-              <label htmlFor="Imagen">Imagen</label>
-              <input type="file" ref={fileInputRef} onChange={handleFileChange} />
-              <button type="button" className="btn save" onClick={handleAddProduct}>
-                Guardar
-              </button>
-              <button type="button" className="btn cancel" onClick={() => setShowAddForm(false)}>
-                Cancelar
-              </button>
-            </form>
-          </div>
-        )}
-        {showEditForm && (
-          <div className="form-container">
-            <h2>Modificar producto</h2>
-            <form>
-
-              <label htmlFor="Nombre">Nombre del producto</label>
               <input
                 type="text"
                 name="Nombre"
@@ -291,53 +278,96 @@ const Dashboard: React.FC = () => {
                 value={formData.Nombre}
                 onChange={handleInputChange}
               />
-
-              <label htmlFor="Descripcion">Descripcion</label>
+              <label htmlFor="Descripcion">Descripción</label>
               <textarea
                 name="Descripcion"
-                placeholder="Descripción"
+                placeholder="Descripción del producto"
                 value={formData.Descripcion}
                 onChange={handleInputChange}
               />
-
               <label htmlFor="Precio">Precio</label>
               <input
                 type="number"
                 name="Precio"
-                placeholder="Precio"
+                min="0"
                 value={formData.Precio}
                 onChange={handleInputChange}
               />
-
               <label htmlFor="Stock">Stock</label>
               <input
                 type="number"
                 name="Stock"
-                placeholder="Existencias"
+                min="0"
                 value={formData.Stock}
                 onChange={handleInputChange}
               />
-
-              {/* Mostrar imagen actual del producto */}
-              {editProduct?.Imagen && (
-                <div className="image-preview">
-                  <p>Imagen actual</p>
-                  <img
-                    src={`http://localhost:3000${editProduct.Imagen}`}
-                    alt="Imagen actual del producto"
-                    className="product-image"
-                  />
-                </div>
-              )}
-
-              {/* Campo para cargar una nueva imagen */}
-              <label htmlFor="Imagen">Actualizar Imagen</label>
+              <label htmlFor="Imagen">Imagen</label>
               <input
                 type="file"
+                name="Imagen"
                 ref={fileInputRef}
                 onChange={handleFileChange}
               />
+              <button
+                type="button"
+                className="btn save"
+                onClick={handleAddProduct}
+              >
+                Guardar producto
+              </button>
+              <button
+                type="button"
+                className="btn cancel"
+                onClick={() => setShowAddForm(false)}
+              >
+                Cancelar
+              </button>
+            </form>
+          </div>
+        )}
 
+        {showEditForm && editProduct && (
+          <div className="form-container">
+            <h2>Editar producto</h2>
+            <form>
+              <label htmlFor="Nombre">Nombre</label>
+              <input
+                type="text"
+                name="Nombre"
+                placeholder="Nombre del producto"
+                value={formData.Nombre}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="Descripcion">Descripción</label>
+              <textarea
+                name="Descripcion"
+                placeholder="Descripción del producto"
+                value={formData.Descripcion}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="Precio">Precio</label>
+              <input
+                type="number"
+                name="Precio"
+                min="0"
+                value={formData.Precio}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="Stock">Stock</label>
+              <input
+                type="number"
+                name="Stock"
+                min="0"
+                value={formData.Stock}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="Imagen">Imagen</label>
+              <input
+                type="file"
+                name="Imagen"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
               <button
                 type="button"
                 className="btn save"
