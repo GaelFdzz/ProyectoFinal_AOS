@@ -72,6 +72,7 @@ const Dashboard: React.FC = () => {
     }
 
     try {
+      // Elimina `Id_Producto` si no es necesario en la petición
       const formDataToSend = new FormData();
       formDataToSend.append("Nombre", formData.Nombre);
       formDataToSend.append("Descripcion", formData.Descripcion);
@@ -80,6 +81,7 @@ const Dashboard: React.FC = () => {
       if (formData.Imagen instanceof File) {
         formDataToSend.append("Imagen", formData.Imagen);
       }
+
 
       const response = await api.post("/productos", formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -104,9 +106,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleSaveEdit = async () => {
-    if (!validateForm()) {
-      return; // Detén la ejecución si el formulario no es válido
-    }
+    if (!validateForm()) return;
 
     try {
       const formDataToSend = new FormData();
@@ -119,6 +119,8 @@ const Dashboard: React.FC = () => {
         formDataToSend.append("Imagen", formData.Imagen);
       }
 
+      console.log([...formDataToSend.entries()]); // Para verificar los datos enviados
+
       const response = await api.put(
         `/productos/${editProduct?.Id_Producto}`,
         formDataToSend,
@@ -130,10 +132,16 @@ const Dashboard: React.FC = () => {
       ));
       setShowEditForm(false);
       resetForm();
-    } catch (error) {
-      console.error("Error al actualizar producto:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Error al actualizar producto:", error.response.data);
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        console.error("Error general:", error);
+      }
     }
   };
+
 
 
 
@@ -254,7 +262,7 @@ const Dashboard: React.FC = () => {
               <textarea name="Descripcion" placeholder="Descripción" value={formData.Descripcion} onChange={handleInputChange} />
 
               <label htmlFor="Precio">Precio</label>
-              <input type="number" name="Precio" placeholder="Precio" value={formData.Precio} onChange={handleInputChange} />
+              <input type="number" name="Precio" min="0" value={formData.Precio} onChange={handleInputChange} />
 
               <label htmlFor="Stock">Stock</label>
               <input type="number" name="Stock" placeholder="Existencias" value={formData.Stock} onChange={handleInputChange} />
