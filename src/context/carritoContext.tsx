@@ -24,11 +24,10 @@ interface CarritoProviderProps {
 
 const CarritoContext = createContext<CarritoContextType | undefined>(undefined);
 
-const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) => {  // Usamos el tipo correcto para los props
-  console.log('userId:', userId);  // Verifica el valor de userId
+const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) => {
+  console.log('userId:', userId);
   const [productosEnCarrito, setProductosEnCarrito] = useState<ProductoCarrito[]>([]);
 
-  // Función utilitaria para manejar fetch y errores
   const fetchData = async (url: string, options?: RequestInit) => {
     try {
       const response = await fetch(url, options);
@@ -49,14 +48,8 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
     }
   };
 
-
-
-
-
-  // Obtener el carrito del usuario
   const obtenerCarrito = async () => {
     try {
-      console.log(`Obteniendo carrito para el userId: ${userId}`);
       const data = await fetchData(`http://localhost:3000/cart/${userId}`);
       const detalles = data.detalles_carrito.map((detalle: any) => ({
         Id_Producto: detalle.productos.Id_Producto,
@@ -72,8 +65,6 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
     }
   };
 
-
-  // Agregar un producto al carrito
   const agregarAlCarrito = async (producto: ProductoCarrito) => {
     try {
       await fetchData(`http://localhost:3000/cart/add`, {
@@ -102,15 +93,7 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
 
   const eliminarDelCarrito = async (productoId: number) => {
     try {
-      const userIdNumber = Number(userId);  // Asegúrate de que es un número
-      const productoIdNumber = Number(productoId);
-
-      if (isNaN(userIdNumber) || isNaN(productoIdNumber)) {
-        console.error('ID de usuario o producto no válido');
-        throw new Error('El ID del usuario o del producto no es válido');
-      }
-
-      const response = await fetch(`http://localhost:3000/cart/${userIdNumber}/${productoIdNumber}`, {
+      const response = await fetch(`http://localhost:3000/cart/${userId}/${productoId}`, {
         method: 'DELETE',
       });
 
@@ -118,25 +101,16 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
         throw new Error('Error al eliminar producto');
       }
 
-      setProductosEnCarrito((prev) => prev.filter((p) => p.Id_Producto !== productoIdNumber));
+      setProductosEnCarrito((prev) => prev.filter((p) => p.Id_Producto !== productoId));
     } catch (error) {
       console.error('Error al eliminar del carrito:', error);
     }
   };
 
-
   const vaciarCarrito = async () => {
     try {
-      const userIdNumber = Number(userId);
-      if (isNaN(userIdNumber)) {
-        throw new Error('El ID del usuario no es válido');
-      }
-
-      const response = await fetch(`http://localhost:3000/cart/${userIdNumber}/vaciar`, { method: 'DELETE' });
-
-
+      const response = await fetch(`http://localhost:3000/cart/${userId}/vaciar`, { method: 'DELETE' });
       if (response) {
-        console.log('Respuesta al vaciar el carrito:', response);  // Verifica la respuesta
         setProductosEnCarrito([]);
       }
     } catch (error) {
@@ -144,27 +118,8 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
     }
   };
 
-
-
-
-  // Efecto para cargar el carrito al montar
   useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    (async () => {
-      try {
-        await obtenerCarrito();
-      } catch (error) {
-        if (signal.aborted) {
-          console.log('Fetch cancelado');
-        }
-      }
-    })();
-
-    return () => {
-      controller.abort();
-    };
+    obtenerCarrito();
   }, [userId]);
 
   return (

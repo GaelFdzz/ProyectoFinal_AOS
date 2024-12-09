@@ -45,16 +45,16 @@ const Login = () => {
       // Guardar el token en localStorage
       localStorage.setItem("access_token", response.data.access_token);
 
-      // Decodificar el token para verificar el rol
+      // Decodificar el token para obtener datos adicionales
       const decodedToken: any = jwtDecode(response.data.access_token);
+      const userId = decodedToken.sub; // Ajusta al nombre real del campo en tu JWT
       const isAdmin = decodedToken.role === 1;
 
-      // Redirigir al dashboard si es admin, o a perfil si no lo es
-      if (isAdmin) {
-        navigate("/dashboard");
-      } else {
-        navigate("/perfil");
-      }
+      // Guardar el userId en localStorage
+      localStorage.setItem("userId", userId);
+
+      // Redirigir según el rol
+      navigate(isAdmin ? "/dashboard" : "/perfil");
 
       // Forzar la actualización del estado en el Header
       window.dispatchEvent(new Event("storage"));
@@ -63,8 +63,6 @@ const Login = () => {
       setError("Correo o contraseña incorrectos");
     }
   };
-
-
 
   const handleRegister = async () => {
     const userData = {

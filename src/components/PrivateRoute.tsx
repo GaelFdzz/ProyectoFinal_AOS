@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 interface PrivateRouteProps {
     element: JSX.Element;
-    roleRequired?: string; // Aquí añadimos la posibilidad de pasar el rol requerido
+    roleRequired?: string;
 }
 
 const PrivateRoute = ({ element, roleRequired }: PrivateRouteProps) => {
@@ -33,7 +33,7 @@ const PrivateRoute = ({ element, roleRequired }: PrivateRouteProps) => {
         }
     }
 
-    // Si no hay token, mostramos el componente solicitado
+    // Si hay token, mostramos el componente solicitado
     return element;
 };
 

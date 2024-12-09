@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Producto } from "../interfaces/producto";
 import "../styles/DetallesProductos.css";
+import { useCarrito } from "../context/carritoContext";
 
 const DetallesProducto = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +14,15 @@ const DetallesProducto = () => {
     calificacion: 0,
     comentario: "",
   });
-  const [haComprado, setHaComprado] = useState(false); // Esto se debe determinar desde el backend.
+  const [haComprado, setHaComprado] = useState(false)
+  const [mensajeErrorResena, setMensajeErrorResena] = useState("");
+  const [usuarioNombre, setUsuarioNombre] = useState("");
+
+  const { productosEnCarrito, agregarAlCarrito } = useCarrito();
+
+  const estaEnElCarrito = productosEnCarrito.some(
+    (item) => item.Id_Producto === producto?.Id_Producto
+  );
 
   useEffect(() => {
     const obtenerProducto = async () => {
@@ -34,10 +43,19 @@ const DetallesProducto = () => {
           setResenas(resenasData);
         }
 
-        // Simula la verificación de si el usuario compró el producto.
-        // En producción, esto debería hacerse en el backend.
-        const haCompradoProducto = true; // Cambia esto según tu lógica.
+        // Simulamos la compra para depuración
+        const haCompradoProducto = false;
         setHaComprado(haCompradoProducto);
+
+        // Obtener el nombre del usuario desde el localStorage
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          const usuarioResponse = await fetch(`http://localhost:3000/usuarios/${userId}`);
+          if (usuarioResponse.ok) {
+            const usuarioData = await usuarioResponse.json();
+            setUsuarioNombre(usuarioData.Nombre);
+          }
+        }
       } catch (error) {
         console.error("Error al obtener el producto o las reseñas:", error);
       } finally {
@@ -50,20 +68,30 @@ const DetallesProducto = () => {
     }
   }, [id]);
 
+  const handleActivarCompraSimulada = () => {
+    setHaComprado(true);
+    alert("Compra simulada. Ahora puedes dejar una reseña.");
+  };
+
   const handleAgregarAlCarrito = async () => {
+    if (!producto) return;
+
+    const imagenUrl =
+      typeof producto.Imagen === "string" ? producto.Imagen : "/default.png";
+
     try {
-      const response = await fetch("http://localhost:3000/carrito", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productoId: id }),
+      await agregarAlCarrito({
+        Id_Producto: producto.Id_Producto,
+        Nombre: producto.Nombre,
+        Descripcion: producto.Descripcion,
+        Precio: producto.Precio,
+        Cantidad: 1,
+        Imagen: imagenUrl,
       });
-      if (response.ok) {
-        alert("Producto agregado al carrito");
-      } else {
-        alert("Error al agregar el producto al carrito");
-      }
+      alert("Producto agregado al carrito correctamente.");
     } catch (error) {
       console.error("Error al agregar al carrito:", error);
+      alert("Hubo un problema al agregar el producto al carrito.");
     }
   };
 
@@ -74,37 +102,51 @@ const DetallesProducto = () => {
   const handleCerrarFormularioResena = () => {
     setMostrarFormularioResena(false);
     setNuevaResena({ calificacion: 0, comentario: "" });
+    setMensajeErrorResena("");
   };
 
   const handleSubmitResena = async () => {
-    if (!haComprado) {
-      alert("Solo puedes agregar una reseña si has comprado este producto.");
+    console.log(
+      `Agregando reseña al producto ${id} por ${usuarioNombre}` +
+      ` (${nuevaResena.calificacion} estrellas)` +
+      ` - ${nuevaResena.comentario}`
+    );
+
+    if (!nuevaResena.comentario || nuevaResena.calificacion < 1 || nuevaResena.calificacion > 5) {
+      setMensajeErrorResena("Por favor, completa todos los campos correctamente.");
       return;
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/productos/${id}/resenas`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          calificacion: nuevaResena.calificacion,
-          comentario: nuevaResena.comentario,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/productos/${id}/resenas`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Comentario: nuevaResena.comentario,
+            Calificacion: nuevaResena.calificacion,
+            Usuario: usuarioNombre,
+            EsSimulacion: haComprado, // Aquí enviamos si es simulación o no
+          }),
+        }
+      );
 
-      if (response.ok) {
-        alert("Reseña agregada exitosamente");
-        handleCerrarFormularioResena();
-        // Actualizar las reseñas
-        const resenasActualizadas = await response.json();
-        setResenas(resenasActualizadas);
-      } else {
-        alert("Error al agregar la reseña");
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Error al agregar la reseña");
       }
+
+      const nuevaListaResenas = await response.json();
+      setResenas(nuevaListaResenas);
+      alert("Reseña añadida con éxito");
+      handleCerrarFormularioResena();
     } catch (error) {
-      console.error("Error al agregar la reseña:", error);
+      console.error(error);
+      setMensajeErrorResena("Hubo un problema al agregar la reseña.");
     }
   };
+
 
   if (cargando) {
     return <div className="spinner">Cargando...</div>;
@@ -130,17 +172,29 @@ const DetallesProducto = () => {
             <p>{producto.Descripcion}</p>
             <p>Precio: {producto.Precio} MXN</p>
             <p>Stock: {producto.Stock}</p>
-            <button
-              className="buttonAgregarAlCarrito"
-              onClick={handleAgregarAlCarrito}
-            >
-              Agregar al carrito
-            </button>
+            {estaEnElCarrito ? (
+              <button className="buttonCarritoYaAgregado">
+                Ya en el carrito
+              </button>
+            ) : (
+              <button
+                className="buttonAgregarAlCarrito"
+                onClick={handleAgregarAlCarrito}
+              >
+                Agregar al carrito
+              </button>
+            )}
             <button
               className="buttonAgregarReseña"
               onClick={handleAbrirFormularioResena}
             >
               Agregar reseña
+            </button>
+            <button
+              className="buttonSimularCompra"
+              onClick={handleActivarCompraSimulada}
+            >
+              Simular compra
             </button>
           </div>
         </div>
@@ -184,7 +238,10 @@ const DetallesProducto = () => {
                 max="5"
                 value={nuevaResena.calificacion}
                 onChange={(e) =>
-                  setNuevaResena({ ...nuevaResena, calificacion: parseInt(e.target.value) })
+                  setNuevaResena({
+                    ...nuevaResena,
+                    calificacion: parseInt(e.target.value),
+                  })
                 }
               />
             </label>
@@ -197,6 +254,7 @@ const DetallesProducto = () => {
                 }
               />
             </label>
+            {mensajeErrorResena && <p className="error-message">{mensajeErrorResena}</p>}
             <button onClick={handleSubmitResena}>Enviar</button>
             <button onClick={handleCerrarFormularioResena}>Cancelar</button>
           </div>

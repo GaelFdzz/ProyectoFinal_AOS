@@ -191,8 +191,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="container">
+      <h1>Gestión de productos</h1>
       <div className="dashboard">
-        <h1>Gestión de productos</h1>
         <button className="btn add" onClick={() => setShowAddForm(true)}>
           Agregar producto
         </button>
@@ -249,16 +249,16 @@ const Dashboard: React.FC = () => {
             <form>
               <label htmlFor="Nombre">Nombre</label>
               <input type="text" name="Nombre" placeholder="Nombre del producto" value={formData.Nombre} onChange={handleInputChange} />
-              
+
               <label htmlFor="Descripcion">Descripcion</label>
               <textarea name="Descripcion" placeholder="Descripción" value={formData.Descripcion} onChange={handleInputChange} />
-              
+
               <label htmlFor="Precio">Precio</label>
               <input type="number" name="Precio" placeholder="Precio" value={formData.Precio} onChange={handleInputChange} />
-              
+
               <label htmlFor="Stock">Stock</label>
               <input type="number" name="Stock" placeholder="Existencias" value={formData.Stock} onChange={handleInputChange} />
-              
+
               <label htmlFor="Imagen">Imagen</label>
               <input type="file" ref={fileInputRef} onChange={handleFileChange} />
               <button type="button" className="btn save" onClick={handleAddProduct}>

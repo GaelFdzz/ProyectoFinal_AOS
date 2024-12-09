@@ -1,150 +1,139 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/EditarPerfil.css"; // Importa el CSS específico para este componente
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../Services/axiosConfig';
+import "../styles/EditarPerfil.css";
+
+interface EditarUsuario {
+  Nombre?: string;
+  Apellido?: string;
+  Correo?: string;
+}
 
 function EditarPerfil() {
-  const [formData, setFormData] = useState({
-    nombre: "",
-    apellido: "",
-    correo: "",
-    foto: "",
-    contrasenaActual: "", // Nuevo campo para la contraseña actual
-    nuevaContrasena: "", // Nuevo campo para la nueva contraseña
-  });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [formData, setFormData] = useState<EditarUsuario>({});
+  const [originalData, setOriginalData] = useState<EditarUsuario>({});
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      api.get(`/usuarios/${userId}`)
+        .then((response) => {
+          setFormData(response.data);
+          setOriginalData(response.data);
+        })
+        .catch(() => setErrorMessage('No se pudo cargar la información del perfil.'));
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({
-          ...prev,
-          foto: reader.result as string, // Guardamos la imagen cargada como base64
-        }));
-      };
-      reader.readAsDataURL(file); // Leemos el archivo como una URL de datos
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleGuardarCambios = () => {
-    if (!formData.nombre || !formData.apellido || !formData.correo) {
-      setErrorMessage("Por favor, rellena todos los campos antes de guardar.");
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    if (
+      formData.Nombre === originalData.Nombre &&
+      formData.Apellido === originalData.Apellido &&
+      formData.Correo === originalData.Correo
+    ) {
+      setSuccessMessage('No se realizaron cambios.');
       return;
     }
 
-    if (formData.nuevaContrasena && formData.nuevaContrasena.length < 6) {
-      setErrorMessage("La nueva contraseña debe tener al menos 6 caracteres.");
-      return;
-    }
-
-    localStorage.setItem("userData", JSON.stringify(formData));
-    navigate("/perfil");
+    api.put(`/usuarios/${userId}`, formData)
+      .then(() => {
+        setSuccessMessage('Perfil actualizado con éxito.');
+        setOriginalData(formData);
+        setTimeout(() => navigate('/perfil'), 2000);
+      })
+      .catch(() => setErrorMessage('Ocurrió un error al guardar los cambios.'));
   };
 
-  const handleRegresarAlPerfil = () => {
-    navigate("/perfil");
+  const handlePasswordChange = () => {
+    if (!currentPassword) {
+      setErrorMessage('Debes ingresar tu contraseña actual.');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setErrorMessage('La nueva contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
+    if (newPassword === currentPassword) {
+      setErrorMessage('La nueva contraseña no puede ser igual a la contraseña actual.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setErrorMessage('Las contraseñas nuevas no coinciden.');
+      return;
+    }
+
+    const userId = Number(localStorage.getItem('userId'));
+    api.put(`/usuarios/${userId}/cambiar-contrasena`, {
+      actualContrasena: currentPassword,
+      nuevaContrasena: newPassword,
+    })
+      .then(() => {
+        setSuccessMessage('Contraseña actualizada con éxito. Redirigiendo al inicio de sesión...');
+        localStorage.removeItem('access_token'); // Asegúrate de eliminar el token JWT
+        localStorage.removeItem('userId'); // Elimina también otros datos de la sesión
+        setTimeout(() => navigate('/login'), 2000);
+      })
+      .catch((error) => {
+        const backendMessage = error.response?.data?.message || 'Error al cambiar la contraseña.';
+        setErrorMessage(backendMessage);
+      });
+
   };
 
   return (
     <div className="editar-perfil-container">
       <div className="editar-perfil-box">
         <h1 className="editar-perfil-title">Editar perfil</h1>
-        <div className="editar-perfil-form">
-          <form>
-            <label className="editar-perfil-label" htmlFor="nombre">
-              Nombre/s
-            </label>
-            <input
-              className="editar-perfil-input"
-              id="nombre"
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              placeholder="Ingresa tu nombre(s)"
-            />
+        <form className='editar-perfil-form'>
+          <label htmlFor="Nombre">Nombre</label>
+          <input name="Nombre" type="text" value={formData.Nombre || ''} onChange={handleChange} />
+          <label htmlFor="Apellido">Apellido</label>
+          <input name="Apellido" type="text" value={formData.Apellido || ''} onChange={handleChange} />
+          <label htmlFor="Correo">Correo</label>
+          <input name="Correo" type="email" value={formData.Correo || ''} onChange={handleChange} />
+          <button type="button" onClick={handleGuardarCambios}>Guardar cambios</button>
+        </form>
 
-            <label className="editar-perfil-label" htmlFor="apellido">
-              Apellido/s
-            </label>
-            <input
-              className="editar-perfil-input"
-              id="apellido"
-              type="text"
-              name="apellido"
-              value={formData.apellido}
-              onChange={handleChange}
-              placeholder="Ingresa tu apellido(s)"
-            />
+        <h2>Cambiar Contraseña</h2>
+        <input
+          type="password"
+          placeholder="Contraseña actual"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Nueva contraseña"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Confirmar contraseña"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <button onClick={handlePasswordChange}>Actualizar Contraseña</button>
 
-            <label className="editar-perfil-label" htmlFor="correo">
-              Correo
-            </label>
-            <input
-              className="editar-perfil-input"
-              id="correo"
-              type="email"
-              name="correo"
-              value={formData.correo}
-              onChange={handleChange}
-              placeholder="Ingresa tu correo electrónico"
-            />
-
-            <label className="editar-perfil-label" htmlFor="foto">
-              Foto de perfil
-            </label>
-            <input
-              className="editar-perfil-input"
-              id="foto"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-            {/* Mostrar imagen previa */}
-            {formData.foto && (
-              <div className="editar-perfil-preview">
-                <img
-                  src={formData.foto}
-                  alt="Vista previa"
-                  className="editar-perfil-foto"
-                />
-              </div>
-            )}
-
-            
-
-            {errorMessage && (
-              <p className="editar-perfil-error-message">{errorMessage}</p>
-            )}
-
-            <div className="editar-perfil-button-container">
-              <button
-                className="editar-perfil-button editar-perfil-button-save"
-                type="button"
-                onClick={handleGuardarCambios}
-              >
-                Guardar cambios
-              </button>
-              <button
-                className="editar-perfil-button editar-perfil-button-back"
-                type="button"
-                onClick={handleRegresarAlPerfil}
-              >
-                Regresar al perfil
-              </button>
-            </div>
-          </form>
-        </div>
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </div>
   );

@@ -143,6 +143,10 @@
     color: black;
 }
 
+.detallesInfo .buttonCarritoYaAgregado {
+    background-color: gray;
+    cursor: not-allowed;
+}
 
 @keyframes spin {
     0% {

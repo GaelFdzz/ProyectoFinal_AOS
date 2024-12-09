@@ -32,6 +32,14 @@
   margin: 5px 0;
 }
 
+.carrito-producto button{
+  background-color: rgb(204, 0, 0);
+  color: white;
+  border: none;
+  padding: 5px 1rem;
+  border-radius: 5px;
+}
+
 .carrito-total {
   text-align: right;
   margin: 20px 0;
@@ -39,12 +47,11 @@
   font-weight: bold;
 }
 
-.vaciar-carrito-btn,
+.vaciar-btn,
 .pagar-btn {
   display: block;
   margin: 10px auto;
   padding: 10px 20px;
-  background-color: #28a745;
   color: white;
   border: none;
   border-radius: 5px;
@@ -52,18 +59,22 @@
   transition: background-color 0.3s;
 }
 
-.vaciar-carrito-btn:hover {
-  background-color: #218838;
-}
-
-.pagar-btn {
-  background-color: #007bff;
-}
-
-.pagar-btn:hover {
+.vaciar-btn{
   background-color: #0056b3;
 }
 
-.carritoVacio{
+.vaciar-btn:hover {
+  background-color: #4986c7
+}
+
+.pagar-btn {
+  background-color: #24863c;
+}
+
+.pagar-btn:hover {
+  background-color: #24863c;
+}
+
+.carrito-vacio{
   text-align: center;
 }

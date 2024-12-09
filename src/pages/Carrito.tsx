@@ -26,8 +26,9 @@ const Carrito = () => {
 
   return (
     <div className="container">
+      <h1 className="carrito-header">Tu carrito</h1>
       <div className="carrito-container">
-        <h1 className="carrito-header">Tu carrito</h1>
+
 
         {productosEnCarrito.length > 0 ? (
           <>

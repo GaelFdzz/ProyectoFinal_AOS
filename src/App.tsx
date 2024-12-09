@@ -35,6 +35,8 @@ function App() {
   const userId = getUserIdFromToken();
   console.log('userId desde el token:', userId);
 
+  
+
   return (
     <CarritoProvider userId={userId}>
       <>
