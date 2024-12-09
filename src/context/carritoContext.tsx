@@ -120,7 +120,6 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
     }
   };
 
-
   useEffect(() => {
     obtenerCarrito();
   }, [userId]);
