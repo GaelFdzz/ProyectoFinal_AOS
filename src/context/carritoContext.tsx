@@ -110,13 +110,16 @@ const CarritoProvider: React.FC<CarritoProviderProps> = ({ children, userId }) =
   const vaciarCarrito = async () => {
     try {
       const response = await fetch(`http://localhost:3000/cart/${userId}/vaciar`, { method: 'DELETE' });
-      if (response) {
-        setProductosEnCarrito([]);
+      if (response.ok) {
+        setProductosEnCarrito([]); // Vaciar carrito en el estado
+      } else {
+        console.error('Error al vaciar el carrito');
       }
     } catch (error) {
       console.error('Error al vaciar el carrito:', error);
     }
   };
+
 
   useEffect(() => {
     obtenerCarrito();
