@@ -207,7 +207,7 @@ const DetallesProducto = () => {
                 <p>
                   <strong>{resena.Usuario}</strong>
                 </p>
-                <p>Calificación: {resena.Calificacion}</p>
+                <p>Calificación: {resena.Calificacion} / 5 ★</p>
                 <p>{resena.Comentario}</p>
                 <p>
                   <small>

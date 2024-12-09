@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import { useCarrito } from '../context/carritoContext';
 import '../styles/carritoPage.css';
 
 const Carrito = () => {
   const { productosEnCarrito, vaciarCarrito, eliminarDelCarrito } = useCarrito();
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   const calcularTotal = () =>
     productosEnCarrito.reduce(
@@ -24,11 +26,19 @@ const Carrito = () => {
     }
   };
 
+  const manejarPago = () => {
+    // Si el carrito tiene productos, redirige a la página de pago
+    if (productosEnCarrito.length > 0) {
+      navigate('/pago'); // Redirige a /pago
+    } else {
+      alert('Tu carrito está vacío. Agrega productos antes de proceder al pago.');
+    }
+  };
+
   return (
     <div className="container">
       <h1 className="carrito-header">Tu carrito</h1>
       <div className="carrito-container">
-
 
         {productosEnCarrito.length > 0 ? (
           <>
@@ -62,13 +72,8 @@ const Carrito = () => {
             <div className="carrito-footer">
               <p className="carrito-total">Total: ${calcularTotal().toFixed(2)}</p>
               <div className="botones-carrito">
-                <button onClick={() => manejarAccion(vaciarCarrito)} className="vaciar-btn">
-                  Vaciar Carrito
-                </button>
-
-                <button>
-                  Pagar
-                </button>
+                <button className='pagar-btn' onClick={manejarPago}>Pagar</button>
+                <button onClick={() => manejarAccion(vaciarCarrito)} className="vaciar-btn">Vaciar Carrito</button>
               </div>
             </div>
           </>

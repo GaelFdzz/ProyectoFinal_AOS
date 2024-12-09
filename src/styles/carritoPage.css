@@ -69,10 +69,11 @@
 
 .pagar-btn {
   background-color: #24863c;
+  padding: 10px 48px;
 }
 
 .pagar-btn:hover {
-  background-color: #24863c;
+  background-color: #24863c98;
 }
 
 .carrito-vacio{

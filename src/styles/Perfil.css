@@ -2,52 +2,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: white; /* Fondo blanco */
+  background-color: #DBDBDB;
 }
 
 .perfil-box {
   background-color: white;
-  border-radius: 10px;
+  border-radius: 17px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 100%;
   max-width: 500px;
   text-align: center;
-  border: 2px solid #f1c40f; /* Borde amarillo más brillante */
-}
-
-.perfil-title {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  color: black; /* Texto en negro */
-  font-weight: 600;
+  display: grid;
+  gap: 20px;
 }
 
 .perfil-info {
   font-size: 1.2rem;
-  color: #666; /* Color gris claro para la información */
-  margin-bottom: 20px;
-}
-
-.perfil-foto {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.perfil-foto-img {
-  width: 300px; /* Ajusta el tamaño de la imagen */
-  height: 300px; /* Mantén la proporción */
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f1c40f; /* Borde amarillo más brillante alrededor de la foto */
+  text-align: left;
 }
 
 .perfil-button-container {
   display: flex;
   justify-content: center;
-  margin-top: 30px; /* Espacio arriba del botón */
+  margin-top: 30px;
 }
 
 .perfil-button {
@@ -56,12 +34,74 @@
   border: none;
   font-size: 1rem;
   cursor: pointer;
-  background-color: #f1c40f; /* Botón amarillo más brillante */
+  background-color: #f1c40f; 
   color: white;
   transition: background-color 0.3s ease;
+  width: 150px; 
 }
 
 .perfil-button:hover {
-  background-color: #f39c12; /* Amarillo más oscuro en hover */
+  background-color: #f39c12;
   opacity: 0.9;
+}
+
+.historial-pedidos {
+  margin-top: 30px;
+}
+
+.historial-pedidos h2 {
+  font-size: 1.6rem;
+  color: black;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.historial-pedidos ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.historial-pedidos li {
+  background-color: white;
+  color: black;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.historial-pedidos li p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.historial-pedidos button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.historial-pedidos .buttonVerDetalles {
+  background-color: #383146;
+  color: white;
+}
+
+.historial-pedidos .buttonVerDetalles:hover {
+  background-color: #2c2333;
+}
+
+.historial-pedidos .buttonAgregarCarrito {
+  background-color: #FFC300;
+  color: white;
+}
+
+.historial-pedidos .buttonAgregarCarrito:hover {
+  background-color: #FFB000;
 }

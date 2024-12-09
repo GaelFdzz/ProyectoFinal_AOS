@@ -98,42 +98,49 @@ function EditarPerfil() {
   };
 
   return (
-    <div className="editar-perfil-container">
-      <div className="editar-perfil-box">
+    <div className="container">
+      <div className="container-editar-perfil">
         <h1 className="editar-perfil-title">Editar perfil</h1>
-        <form className='editar-perfil-form'>
-          <label htmlFor="Nombre">Nombre</label>
-          <input name="Nombre" type="text" value={formData.Nombre || ''} onChange={handleChange} />
-          <label htmlFor="Apellido">Apellido</label>
-          <input name="Apellido" type="text" value={formData.Apellido || ''} onChange={handleChange} />
-          <label htmlFor="Correo">Correo</label>
-          <input name="Correo" type="email" value={formData.Correo || ''} onChange={handleChange} />
-          <button type="button" onClick={handleGuardarCambios}>Guardar cambios</button>
-        </form>
+        <div className="editar-perfil-box">
+          <form className='editar-perfil-form'>
+            <label htmlFor="Nombre">Nombre</label>
+            <input name="Nombre" type="text" value={formData.Nombre || ''} onChange={handleChange} />
+            <label htmlFor="Apellido">Apellido</label>
+            <input name="Apellido" type="text" value={formData.Apellido || ''} onChange={handleChange} />
+            <label htmlFor="Correo">Correo</label>
+            <input name="Correo" type="email" value={formData.Correo || ''} onChange={handleChange} />
+            <button type="button" onClick={handleGuardarCambios}>Guardar cambios</button>
+          </form>
 
-        <h2>Cambiar Contraseña</h2>
-        <input
-          type="password"
-          placeholder="Contraseña actual"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Nueva contraseña"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <button onClick={handlePasswordChange}>Actualizar Contraseña</button>
+          <div className="container-cambiarContrasena">
+            <h2>Cambiar Contraseña</h2>
+            <label htmlFor="">Contraseña actual</label>
+            <input
+              type="password"
+              placeholder="Contraseña actual"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <label htmlFor="">Nueva contraseña</label>
+            <input
+              type="password"
+              placeholder="Nueva contraseña"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <label htmlFor="">Confirmar contraseña</label>
+            <input
+              type="password"
+              placeholder="Confirmar contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <button className='button-actualizar-contrasena' onClick={handlePasswordChange}>Actualizar Contraseña</button>
+          </div>
 
-        {successMessage && <p className="success-message">{successMessage}</p>}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+        </div>
       </div>
     </div>
   );

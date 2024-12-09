@@ -75,6 +75,10 @@
     color: white;
 }
 
+.buttonSimularCompra{
+    background-color: #38314660;
+}
+
 .detallesInfo button:hover {
     opacity: 80%;
 }
